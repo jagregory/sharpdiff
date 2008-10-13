@@ -5,23 +5,23 @@ namespace SharpDiff
 {
     public class Header
     {
-        public Header(FormatType format, FileDef file)
+        public Header(FormatType format, IEnumerable<FileDef> files)
         {
             Format = format;
-            File = file;
+            Files = files;
         }
 
         public FormatType Format { get; private set; }
-        public FileDef File { get; private set; }
+        public IEnumerable<FileDef> Files { get; private set; }
 
         public override string ToString()
         {
             var output = "Header: " + Format.Name + Environment.NewLine;
 
-            //foreach (var file in Files)
-            //{
-                output += "  " + File.Letter + "/" + File.FileName + Environment.NewLine;
-            //}
+            foreach (var file in Files)
+            {
+                output += "  " + file.Letter + "/" + file.FileName + Environment.NewLine;
+            }
 
             return output;
         }

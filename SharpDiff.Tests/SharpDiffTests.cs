@@ -27,7 +27,7 @@ namespace SharpDiff.Tests
             Assert.That(fileDiff.RightFileName, Is.EqualTo("SmallTextFile.txt"));
         }
 
-        [Test, Explicit]
+        [Test]
         public void RebuildParser()
         {
             new OMetaDiffParser().something();

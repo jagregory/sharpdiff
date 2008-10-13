@@ -21,7 +21,7 @@ namespace SharpDiff
 
         public void Somethingelse()
         {
-            var test = Grammars.ParseWith<DiffParser>("diff --git a/SmallTextFile.txt", x => x.Header);
+            var test = Grammars.ParseWith<DiffParser>("diff --git a/SmallTextFile.txt b/AnotherSmallTextFile.txt c/third", x => x.Header);
 
             Console.WriteLine(test.HeadFirstItem.As<Header>());
         }
