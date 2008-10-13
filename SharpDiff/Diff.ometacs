@@ -1,8 +1,8 @@
 using OMetaSharp;
 
 ometa SharpDiff.DiffParser : Parser {
-  // Header = "diff" Space FormatType,
+  Header = "diff" Space FormatType:format	-> { new Header(format.As<FormatType>()) },
   
-  FormatType = "diff --" Text:format -> { new FormatType(format.As<string>()) },
+  FormatType = "--" Text:format				-> { new FormatType(format.As<string>()) },
   Text = LetterOrDigit+
 }
