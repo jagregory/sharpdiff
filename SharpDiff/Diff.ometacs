@@ -1,8 +1,19 @@
 using OMetaSharp;
 
 ometa SharpDiff.DiffParser : Parser {
-  Header = "diff" Space FormatType:format	-> { new Header(format.As<FormatType>()) },
-  
-  FormatType = "--" Text:format				-> { new FormatType(format.As<string>()) },
-  Text = LetterOrDigit+
+	Header = "diff" Space FormatType:format Space FileDef:file
+		-> { new Header(format.As<FormatType>(), file.As<FileDef>()) },
+	
+	//FileDefs = FileDef+:files Spaces End
+		//-> { files },
+	FileDef = Letter:letter "/" Filename:filename
+		-> { new FileDef(letter.As<char>(), filename.As<string>()) },
+		
+	FormatType = "--" Text:format
+		-> { new FormatType(format.As<string>()) },
+
+	Filename = Text:filename "." Text:extension -> { filename + "." + extension }
+			 | Text:filename -> { filename },
+
+	Text = LetterOrDigit+:i
 }
