@@ -9,31 +9,69 @@ namespace SharpDiff
             OMetaList<HostExpression> format = null;
             OMetaList<HostExpression> files = null;
             modifiedStream = inputStream;
-            if(!MetaRules.Apply(
-                delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            if(!MetaRules.Or(modifiedStream, out result, out modifiedStream,
+            delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            {
+                modifiedStream2 = inputStream2;
+                if(!MetaRules.Apply(
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("diff").AsHostExpressionList()))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(Space, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(FormatType, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        format = result3;
+                        if(!MetaRules.Apply(FileDefs, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        files = result3;
+                        result3 = ( new Header(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) ).AsHostExpressionList();
+                        return MetaRules.Success();
+                    }, modifiedStream2, out result2, out modifiedStream2))
                 {
-                    modifiedStream2 = inputStream2;
-                    if(!MetaRules.ApplyWithArgs(Token, modifiedStream2, out result2, out modifiedStream2, ("diff").AsHostExpressionList()))
+                    return MetaRules.Fail(out result2, out modifiedStream2);
+                }
+                return MetaRules.Success();
+            }
+            ,delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            {
+                modifiedStream2 = inputStream2;
+                if(!MetaRules.Apply(
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
                     {
-                        return MetaRules.Fail(out result2, out modifiedStream2);
-                    }
-                    if(!MetaRules.Apply(Space, modifiedStream2, out result2, out modifiedStream2))
-                    {
-                        return MetaRules.Fail(out result2, out modifiedStream2);
-                    }
-                    if(!MetaRules.Apply(FormatType, modifiedStream2, out result2, out modifiedStream2))
-                    {
-                        return MetaRules.Fail(out result2, out modifiedStream2);
-                    }
-                    format = result2;
-                    if(!MetaRules.Apply(FileDefs, modifiedStream2, out result2, out modifiedStream2))
-                    {
-                        return MetaRules.Fail(out result2, out modifiedStream2);
-                    }
-                    files = result2;
-                    result2 = ( new Header(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) ).AsHostExpressionList();
-                    return MetaRules.Success();
-                }, modifiedStream, out result, out modifiedStream))
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("diff").AsHostExpressionList()))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(Space, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(FormatType, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        format = result3;
+                        result3 = ( new Header(format.As<FormatType>()) ).AsHostExpressionList();
+                        return MetaRules.Success();
+                    }, modifiedStream2, out result2, out modifiedStream2))
+                {
+                    return MetaRules.Fail(out result2, out modifiedStream2);
+                }
+                return MetaRules.Success();
+            }
+            ))
             {
                 return MetaRules.Fail(out result, out modifiedStream);
             }
@@ -75,31 +113,70 @@ namespace SharpDiff
             OMetaList<HostExpression> letter = null;
             OMetaList<HostExpression> filename = null;
             modifiedStream = inputStream;
-            if(!MetaRules.Apply(
-                delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            if(!MetaRules.Or(modifiedStream, out result, out modifiedStream,
+            delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            {
+                modifiedStream2 = inputStream2;
+                if(!MetaRules.Apply(
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.Apply(Space, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(Letter, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        letter = result3;
+                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("/").AsHostExpressionList()))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(Filename, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        filename = result3;
+                        result3 = ( new FileDef(letter.As<char>(), filename.As<string>()) ).AsHostExpressionList();
+                        return MetaRules.Success();
+                    }, modifiedStream2, out result2, out modifiedStream2))
                 {
-                    modifiedStream2 = inputStream2;
-                    if(!MetaRules.Apply(Space, modifiedStream2, out result2, out modifiedStream2))
+                    return MetaRules.Fail(out result2, out modifiedStream2);
+                }
+                return MetaRules.Success();
+            }
+            ,delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            {
+                modifiedStream2 = inputStream2;
+                if(!MetaRules.Apply(
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
                     {
-                        return MetaRules.Fail(out result2, out modifiedStream2);
-                    }
-                    if(!MetaRules.Apply(Letter, modifiedStream2, out result2, out modifiedStream2))
-                    {
-                        return MetaRules.Fail(out result2, out modifiedStream2);
-                    }
-                    letter = result2;
-                    if(!MetaRules.ApplyWithArgs(Token, modifiedStream2, out result2, out modifiedStream2, ("/").AsHostExpressionList()))
-                    {
-                        return MetaRules.Fail(out result2, out modifiedStream2);
-                    }
-                    if(!MetaRules.Apply(Filename, modifiedStream2, out result2, out modifiedStream2))
-                    {
-                        return MetaRules.Fail(out result2, out modifiedStream2);
-                    }
-                    filename = result2;
-                    result2 = ( new FileDef(letter.As<char>(), filename.As<string>()) ).AsHostExpressionList();
-                    return MetaRules.Success();
-                }, modifiedStream, out result, out modifiedStream))
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.Apply(Letter, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        letter = result3;
+                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("/").AsHostExpressionList()))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(Filename, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        filename = result3;
+                        result3 = ( new FileDef(letter.As<char>(), filename.As<string>()) ).AsHostExpressionList();
+                        return MetaRules.Success();
+                    }, modifiedStream2, out result2, out modifiedStream2))
+                {
+                    return MetaRules.Fail(out result2, out modifiedStream2);
+                }
+                return MetaRules.Success();
+            }
+            ))
             {
                 return MetaRules.Fail(out result, out modifiedStream);
             }

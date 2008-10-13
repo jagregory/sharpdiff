@@ -3,40 +3,113 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using OMetaSharp;
 
 namespace SharpDiff.Tests
 {
     [TestFixture]
     public class SharpDiffTests
     {
-        [Test]
-        public void InvalidDiffFormatExceptionThrownIfADiffFileOtherThanGitIsGiven()
-        {
-            var parser = new DiffParser2();
-
-            Assert.Throws<InvalidDiffFormatException>(() => parser.Parse("diff --not-git"));
-        }
-
-        [Test]
-        public void FileHeadersAreParsed()
-        {
-            var parser = new DiffParser2();
-            var fileDiff = parser.Parse("diff --git a/SmallTextFile.txt b/SmallTextFile.txt");
-
-            Assert.That(fileDiff.LeftFileName, Is.EqualTo("SmallTextFile.txt"));
-            Assert.That(fileDiff.RightFileName, Is.EqualTo("SmallTextFile.txt"));
-        }
-
-        [Test]
+        [Test, Explicit]
         public void RebuildParser()
         {
-            new OMetaDiffParser().something();
+            new OMetaCodeGenerator().Rebuild();
         }
 
         [Test]
-        public void Test()
+        public void FormatParsed()
         {
-            new OMetaDiffParser().Somethingelse();
+            var result = Parse<FormatType>("--git", x => x.FormatType);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Name, Is.EqualTo("git"));
+        }
+
+        [Test]
+        public void FilenameParsed()
+        {
+            var result = Parse<FileDef>("a/File.name", x => x.FileDef);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Letter, Is.EqualTo('a'));
+            Assert.That(result.FileName, Is.EqualTo("File.name"));
+        }
+
+        [Test]
+        public void FilenameParsedWithoutExtension()
+        {
+            var result = Parse<FileDef>("a/Filename", x => x.FileDef);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Letter, Is.EqualTo('a'));
+            Assert.That(result.FileName, Is.EqualTo("Filename"));
+        }
+
+        [Test]
+        public void FilenameParsedWithPreceedingSpace()
+        {
+            var result = Parse<FileDef>(" a/Filename", x => x.FileDef);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Letter, Is.EqualTo('a'));
+            Assert.That(result.FileName, Is.EqualTo("Filename"));
+        }
+
+        [Test]
+        public void MultipleFilenamesAreParsed()
+        {
+            var result = ParseList<FileDef>(" a/Filename b/Second.txt", x => x.FileDefs);
+            var list = new List<FileDef>(result);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(list[0], Is.Not.Null);
+            Assert.That(list[0].Letter, Is.EqualTo('a'));
+            Assert.That(list[0].FileName, Is.EqualTo("Filename"));
+
+            Assert.That(list[1], Is.Not.Null);
+            Assert.That(list[1].Letter, Is.EqualTo('b'));
+            Assert.That(list[1].FileName, Is.EqualTo("Second.txt"));
+        }
+
+        [Test]
+        public void HeaderAndFormatParsed()
+        {
+            var result = Parse<Header>("diff --git", x => x.Header);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Format, Is.Not.Null);
+            Assert.That(result.Format.Name, Is.EqualTo("git"));
+        }
+
+        [Test]
+        public void HeaderAndFormatParsedWithFiles()
+        {
+            var result = Parse<Header>("diff --git a/Filename b/File2.txt", x => x.Header);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Format, Is.Not.Null);
+            Assert.That(result.Format.Name, Is.EqualTo("git"));
+
+            var list = new List<FileDef>(result.Files);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(list[0], Is.Not.Null);
+            Assert.That(list[0].Letter, Is.EqualTo('a'));
+            Assert.That(list[0].FileName, Is.EqualTo("Filename"));
+
+            Assert.That(list[1], Is.Not.Null);
+            Assert.That(list[1].Letter, Is.EqualTo('b'));
+            Assert.That(list[1].FileName, Is.EqualTo("File2.txt"));
+        }
+
+        private T Parse<T>(string text, Func<DiffParser, Rule<char>> ruleFetcher)
+        {
+            return Grammars.ParseWith(text, ruleFetcher).As<T>();
+        }
+
+        private IEnumerable<T> ParseList<T>(string text, Func<DiffParser, Rule<char>> ruleFetcher)
+        {
+            return Grammars.ParseWith(text, ruleFetcher).ToIEnumerable<T>();
         }
     }
 }

@@ -53,14 +53,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiffParser.cs" />
     <Compile Include="FileDef.cs" />
     <Compile Include="FileDiff.cs" />
     <Compile Include="FormatType.cs" />
     <Compile Include="Generated\Diff.cs" />
     <Compile Include="Header.cs" />
     <Compile Include="InvalidDiffFormatException.cs" />
-    <Compile Include="OMetaDiffParser.cs" />
+    <Compile Include="OMetaCodeGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

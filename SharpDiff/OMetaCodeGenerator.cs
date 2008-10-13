@@ -4,9 +4,9 @@ using OMetaSharp;
 
 namespace SharpDiff
 {
-    public class OMetaDiffParser
+    public class OMetaCodeGenerator
     {
-        public void something()
+        public void Rebuild()
         {
             var contents = File.ReadAllText("Diff.ometacs");
             var result = Grammars.ParseGrammarThenOptimizeThenTranslate
@@ -17,13 +17,6 @@ namespace SharpDiff
                 t => t.Trans);
 
             File.WriteAllText(@"C:\Development\SharpDiff\SharpDiff\Generated\Diff.cs", result);
-        }
-
-        public void Somethingelse()
-        {
-            var test = Grammars.ParseWith<DiffParser>("diff --git a/SmallTextFile.txt b/AnotherSmallTextFile.txt c/third", x => x.Header);
-
-            Console.WriteLine(test.HeadFirstItem.As<Header>());
         }
     }
 }

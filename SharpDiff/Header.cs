@@ -5,6 +5,10 @@ namespace SharpDiff
 {
     public class Header
     {
+        public Header(FormatType format)
+            : this(format, new List<FileDef>())
+        {}
+
         public Header(FormatType format, IEnumerable<FileDef> files)
         {
             Format = format;
