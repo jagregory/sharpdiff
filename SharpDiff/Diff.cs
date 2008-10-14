@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace SharpDiff
 {
-    public class Header
+    public class Diff
     {
-        public Header(FormatType format)
+        public Diff(FormatType format)
             : this(format, new List<FileDef>())
         {}
 
-        public Header(FormatType format, IEnumerable<FileDef> files)
+        public Diff(FormatType format, IEnumerable<FileDef> files)
         {
             Format = format;
             Files = files;
@@ -20,7 +20,7 @@ namespace SharpDiff
 
         public override string ToString()
         {
-            var output = "Header: " + Format.Name + Environment.NewLine;
+            var output = "Diff: " + Format.Name + Environment.NewLine;
 
             foreach (var file in Files)
             {

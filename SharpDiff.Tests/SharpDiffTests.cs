@@ -72,9 +72,9 @@ namespace SharpDiff.Tests
         }
 
         [Test]
-        public void HeaderAndFormatParsed()
+        public void DiffAndFormatParsed()
         {
-            var result = Parse<Header>("diff --git", x => x.Header);
+            var result = Parse<Diff>("diff --git", x => x.Header);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Format, Is.Not.Null);
@@ -82,9 +82,9 @@ namespace SharpDiff.Tests
         }
 
         [Test]
-        public void HeaderAndFormatParsedWithFiles()
+        public void DiffAndFormatParsedWithFiles()
         {
-            var result = Parse<Header>("diff --git a/Filename b/File2.txt", x => x.Header);
+            var result = Parse<Diff>("diff --git a/Filename b/File2.txt", x => x.Header);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Format, Is.Not.Null);
@@ -124,6 +124,30 @@ namespace SharpDiff.Tests
             Assert.That(result.Mode, Is.EqualTo("100644"));
         }
 
+        [Test]
+        public void ChunkHeaderReturnedForAddRemoveFileHeader()
+        {
+            var result = Parse<ChunkHeader>("--- a/SmallTextFile.txt\r\n+++ b/SmallTextFile.txt", x => x.ChunkHeader);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.OriginalFile.Letter, Is.EqualTo('a'));
+            Assert.That(result.OriginalFile.FileName, Is.EqualTo("SmallTextFile.txt"));
+            Assert.That(result.NewFile.Letter, Is.EqualTo('b'));
+            Assert.That(result.NewFile.FileName, Is.EqualTo("SmallTextFile.txt"));
+        }
+
+        [Test]
+        public void ChunkReturnedWithHeader()
+        {
+            var result = Parse<Chunk>("--- a/SmallTextFile.txt\r\n+++ b/SmallTextFile.txt", x => x.Chunk);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.OriginalFile.Letter, Is.EqualTo('a'));
+            Assert.That(result.OriginalFile.FileName, Is.EqualTo("SmallTextFile.txt"));
+            Assert.That(result.NewFile.Letter, Is.EqualTo('b'));
+            Assert.That(result.NewFile.FileName, Is.EqualTo("SmallTextFile.txt"));
+        }
+
         private T Parse<T>(string text, Func<DiffParser, Rule<char>> ruleFetcher)
         {
             return Grammars.ParseWith(text, ruleFetcher).As<T>();
@@ -133,5 +157,36 @@ namespace SharpDiff.Tests
         {
             return Grammars.ParseWith(text, ruleFetcher).ToIEnumerable<T>();
         }
+
+        // @@ -1,3 +1,3 @@
+        // @@ -L,N +L,N @@
+        // L = Start line
+        // N = Lines affected
+
+        /*
+Diff
+  Format
+  Files
+  ChunkHeader
+    OriginalRange
+	NewRange
+	Lines
+		AdditionLine
+		SubtractionLine
+		ContextLine
+         */
+
+        /*
+diff --git a/SmallTextFile.txt b/SmallTextFile.txt
+index f1c2d64..c750789 100644
+--- a/SmallTextFile.txt
++++ b/SmallTextFile.txt
+@@ -1,3 +1,4 @@
+ This is a small text file
++of my almighty creation,
+ with a few lines of text
+ inside, nothing much.
+\ No newline at end of file
+         */
     }
 }

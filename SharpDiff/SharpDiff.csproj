@@ -53,12 +53,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chunk.cs" />
+    <Compile Include="ChunkHeader.cs" />
     <Compile Include="FileDef.cs" />
-    <Compile Include="FileDiff.cs" />
     <Compile Include="FormatType.cs" />
     <Compile Include="Generated\Diff.cs" />
     <Compile Include="HashRange.cs" />
-    <Compile Include="Header.cs" />
+    <Compile Include="Diff.cs" />
     <Compile Include="IndexHeader.cs" />
     <Compile Include="InvalidDiffFormatException.cs" />
     <Compile Include="OMetaCodeGenerator.cs" />

@@ -1,9 +1,12 @@
 using OMetaSharp;
 
 ometa SharpDiff.DiffParser : Parser {
-	Header		= "diff" Space FormatType:format FileDefs:files		-> { new Header(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) }
-				| "diff" Space FormatType:format					-> { new Header(format.As<FormatType>()) },
+	Header		= "diff" Space FormatType:format FileDefs:files		-> { new Diff(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) }
+				| "diff" Space FormatType:format					-> { new Diff(format.As<FormatType>()) },
 	IndexHeader = "index" Space HashRange:range Space Text:mode		-> { new IndexHeader(range.As<HashRange>(), mode.As<string>()) },
+	Chunk		= ChunkHeader:header								-> { new Chunk(header.As<ChunkHeader>()) },
+	ChunkHeader	= "---" FileDef:originalFile NewLine "+++" FileDef:newFile
+																	-> { new ChunkHeader(originalFile.As<FileDef>(), newFile.As<FileDef>()) },
 	FileDefs	= FileDef+:files									-> { files },
 	FileDef		= Space Letter:letter "/" Filename:filename			-> { new FileDef(letter.As<char>(), filename.As<string>()) }
 				| Letter:letter "/" Filename:filename				-> { new FileDef(letter.As<char>(), filename.As<string>()) },
@@ -11,5 +14,7 @@ ometa SharpDiff.DiffParser : Parser {
 	HashRange	= Text:first ".." Text:second						-> { new HashRange(first.As<string>(), second.As<string>()) },
 	Filename	= Text:filename "." Text:extension					-> { filename + "." + extension }
 				| Text:filename										-> { filename },
-	Text		= LetterOrDigit+:i
+	Text		= LetterOrDigit+:i,
+	NewLine		= '\r' '\n'
+				| '\n'
 }
