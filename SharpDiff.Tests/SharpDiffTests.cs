@@ -102,6 +102,28 @@ namespace SharpDiff.Tests
             Assert.That(list[1].FileName, Is.EqualTo("File2.txt"));
         }
 
+        [Test]
+        public void HashRangeParsed()
+        {
+            var result = Parse<HashRange>("c750789..f1c2d64", x => x.HashRange);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Start, Is.EqualTo("c750789"));
+            Assert.That(result.End, Is.EqualTo("f1c2d64"));
+        }
+
+        [Test]
+        public void IndexExtendedHeaderIsParsed()
+        {
+            var result = Parse<IndexHeader>("index c750789..f1c2d64 100644", x => x.IndexHeader);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Range, Is.Not.Null);
+            Assert.That(result.Range.Start, Is.EqualTo("c750789"));
+            Assert.That(result.Range.End, Is.EqualTo("f1c2d64"));
+            Assert.That(result.Mode, Is.EqualTo("100644"));
+        }
+
         private T Parse<T>(string text, Func<DiffParser, Rule<char>> ruleFetcher)
         {
             return Grammars.ParseWith(text, ruleFetcher).As<T>();

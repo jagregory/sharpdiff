@@ -57,7 +57,9 @@
     <Compile Include="FileDiff.cs" />
     <Compile Include="FormatType.cs" />
     <Compile Include="Generated\Diff.cs" />
+    <Compile Include="HashRange.cs" />
     <Compile Include="Header.cs" />
+    <Compile Include="IndexHeader.cs" />
     <Compile Include="InvalidDiffFormatException.cs" />
     <Compile Include="OMetaCodeGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -77,6 +77,45 @@ namespace SharpDiff
             }
             return MetaRules.Success();
         }
+        public virtual bool IndexHeader(OMetaStream<char> inputStream, out OMetaList<HostExpression> result, out OMetaStream <char> modifiedStream)
+        {
+            OMetaList<HostExpression> range = null;
+            OMetaList<HostExpression> mode = null;
+            modifiedStream = inputStream;
+            if(!MetaRules.Apply(
+                delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+                {
+                    modifiedStream2 = inputStream2;
+                    if(!MetaRules.ApplyWithArgs(Token, modifiedStream2, out result2, out modifiedStream2, ("index").AsHostExpressionList()))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    if(!MetaRules.Apply(Space, modifiedStream2, out result2, out modifiedStream2))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    if(!MetaRules.Apply(HashRange, modifiedStream2, out result2, out modifiedStream2))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    range = result2;
+                    if(!MetaRules.Apply(Space, modifiedStream2, out result2, out modifiedStream2))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    if(!MetaRules.Apply(Text, modifiedStream2, out result2, out modifiedStream2))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    mode = result2;
+                    result2 = ( new IndexHeader(range.As<HashRange>(), mode.As<string>()) ).AsHostExpressionList();
+                    return MetaRules.Success();
+                }, modifiedStream, out result, out modifiedStream))
+            {
+                return MetaRules.Fail(out result, out modifiedStream);
+            }
+            return MetaRules.Success();
+        }
         public virtual bool FileDefs(OMetaStream<char> inputStream, out OMetaList<HostExpression> result, out OMetaStream <char> modifiedStream)
         {
             OMetaList<HostExpression> files = null;
@@ -200,6 +239,37 @@ namespace SharpDiff
                     }
                     format = result2;
                     result2 = ( new FormatType(format.As<string>()) ).AsHostExpressionList();
+                    return MetaRules.Success();
+                }, modifiedStream, out result, out modifiedStream))
+            {
+                return MetaRules.Fail(out result, out modifiedStream);
+            }
+            return MetaRules.Success();
+        }
+        public virtual bool HashRange(OMetaStream<char> inputStream, out OMetaList<HostExpression> result, out OMetaStream <char> modifiedStream)
+        {
+            OMetaList<HostExpression> first = null;
+            OMetaList<HostExpression> second = null;
+            modifiedStream = inputStream;
+            if(!MetaRules.Apply(
+                delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+                {
+                    modifiedStream2 = inputStream2;
+                    if(!MetaRules.Apply(Text, modifiedStream2, out result2, out modifiedStream2))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    first = result2;
+                    if(!MetaRules.ApplyWithArgs(Token, modifiedStream2, out result2, out modifiedStream2, ("..").AsHostExpressionList()))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    if(!MetaRules.Apply(Text, modifiedStream2, out result2, out modifiedStream2))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    second = result2;
+                    result2 = ( new HashRange(first.As<string>(), second.As<string>()) ).AsHostExpressionList();
                     return MetaRules.Success();
                 }, modifiedStream, out result, out modifiedStream))
             {
