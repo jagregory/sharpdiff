@@ -3,10 +3,14 @@ using OMetaSharp;
 ometa SharpDiff.DiffParser : Parser {
 	Header		= "diff" Space FormatType:format FileDefs:files		-> { new Diff(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) }
 				| "diff" Space FormatType:format					-> { new Diff(format.As<FormatType>()) },
-	IndexHeader = "index" Space HashRange:range Space Text:mode		-> { new IndexHeader(range.As<HashRange>(), mode.As<string>()) },
-	Chunk		= ChunkHeader:header								-> { new Chunk(header.As<ChunkHeader>()) },
+	IndexHeader = "index" Space HashRange:range Space Number:mode	-> { new IndexHeader(range.As<HashRange>(), mode.As<int>()) },
+	Chunk		= ChunkHeader:header NewLine ChunkRange:range		-> { new Chunk(header.As<ChunkHeader>(), range.As<ChunkRange>()) },
 	ChunkHeader	= "---" FileDef:originalFile NewLine "+++" FileDef:newFile
 																	-> { new ChunkHeader(originalFile.As<FileDef>(), newFile.As<FileDef>()) },
+	ChunkRange	= "@@" Space ChangeRange:originalRange Space ChangeRange:newRange Space "@@"
+																	-> { new ChunkRange(originalRange.As<ChangeRange>(), newRange.As<ChangeRange>()) },
+	ChangeRange	= "+" Number:line "," Number:affected				-> { new ChangeRange(line.As<int>(), affected.As<int>()) }
+				| "-" Number:line "," Number:affected				-> { new ChangeRange(line.As<int>(), affected.As<int>()) },
 	FileDefs	= FileDef+:files									-> { files },
 	FileDef		= Space Letter:letter "/" Filename:filename			-> { new FileDef(letter.As<char>(), filename.As<string>()) }
 				| Letter:letter "/" Filename:filename				-> { new FileDef(letter.As<char>(), filename.As<string>()) },
@@ -15,6 +19,7 @@ ometa SharpDiff.DiffParser : Parser {
 	Filename	= Text:filename "." Text:extension					-> { filename + "." + extension }
 				| Text:filename										-> { filename },
 	Text		= LetterOrDigit+:i,
+	Number	   ^= Digit+:ds<string>									-> { int.Parse(ds) },
 	NewLine		= '\r' '\n'
 				| '\n'
 }

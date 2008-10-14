@@ -8,7 +8,7 @@ namespace SharpDiff
     {
         public void Rebuild()
         {
-            var contents = File.ReadAllText("Diff.ometacs");
+            var contents = File.ReadAllText("Parser\\DiffParser.ometacs");
             var result = Grammars.ParseGrammarThenOptimizeThenTranslate
                 <OMetaParser, OMetaOptimizer, OMetaTranslator>
             (contents,
@@ -16,7 +16,7 @@ namespace SharpDiff
                 o => o.OptimizeGrammar,
                 t => t.Trans);
 
-            File.WriteAllText(@"C:\Development\SharpDiff\SharpDiff\Generated\Diff.cs", result);
+            File.WriteAllText(@"C:\Development\SharpDiff\SharpDiff\Parser\DiffParser.cs", result);
         }
     }
 }

@@ -53,11 +53,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeRange.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="ChunkHeader.cs" />
+    <Compile Include="ChunkRange.cs" />
     <Compile Include="FileDef.cs" />
     <Compile Include="FormatType.cs" />
-    <Compile Include="Generated\Diff.cs" />
+    <Compile Include="Parser\DiffParser.cs" />
     <Compile Include="HashRange.cs" />
     <Compile Include="Diff.cs" />
     <Compile Include="IndexHeader.cs" />
@@ -66,7 +68,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Diff.ometacs">
+    <None Include="Parser\DiffParser.ometacs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

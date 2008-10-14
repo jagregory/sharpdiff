@@ -121,7 +121,7 @@ namespace SharpDiff.Tests
             Assert.That(result.Range, Is.Not.Null);
             Assert.That(result.Range.Start, Is.EqualTo("c750789"));
             Assert.That(result.Range.End, Is.EqualTo("f1c2d64"));
-            Assert.That(result.Mode, Is.EqualTo("100644"));
+            Assert.That(result.Mode, Is.EqualTo(100644));
         }
 
         [Test]
@@ -139,13 +139,56 @@ namespace SharpDiff.Tests
         [Test]
         public void ChunkReturnedWithHeader()
         {
-            var result = Parse<Chunk>("--- a/SmallTextFile.txt\r\n+++ b/SmallTextFile.txt", x => x.Chunk);
+            var result = Parse<Chunk>("--- a/SmallTextFile.txt\r\n+++ b/SmallTextFile.txt\r\n@@ -1,30 +1,3 @@", x => x.Chunk);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.OriginalFile.Letter, Is.EqualTo('a'));
             Assert.That(result.OriginalFile.FileName, Is.EqualTo("SmallTextFile.txt"));
             Assert.That(result.NewFile.Letter, Is.EqualTo('b'));
             Assert.That(result.NewFile.FileName, Is.EqualTo("SmallTextFile.txt"));
+        }
+
+        [Test]
+        public void OriginalChangeRangeParsed()
+        {
+            var result = Parse<ChangeRange>("-1,30", x => x.ChangeRange);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StartLine, Is.EqualTo(1));
+            Assert.That(result.LinesAffected, Is.EqualTo(30));
+        }
+
+        [Test]
+        public void NewChangeRangeParsed()
+        {
+            var result = Parse<ChangeRange>("+1,3", x => x.ChangeRange);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StartLine, Is.EqualTo(1));
+            Assert.That(result.LinesAffected, Is.EqualTo(3));
+        }
+        
+        [Test]
+        public void ChunkRangeParsed()
+        {
+            var result = Parse<ChunkRange>("@@ -1,30 +1,3 @@", x => x.ChunkRange);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.OriginalRange.StartLine, Is.EqualTo(1));
+            Assert.That(result.OriginalRange.LinesAffected, Is.EqualTo(30));
+            Assert.That(result.NewRange.StartLine, Is.EqualTo(1));
+            Assert.That(result.NewRange.LinesAffected, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void ChunkHasChunkRange()
+        {
+            var result = Parse<Chunk>("--- a/SmallTextFile.txt\r\n+++ b/SmallTextFile.txt\r\n@@ -1,30 +1,3 @@", x => x.Chunk);
+
+            Assert.That(result.OriginalRange.StartLine, Is.EqualTo(1));
+            Assert.That(result.OriginalRange.LinesAffected, Is.EqualTo(30));
+            Assert.That(result.NewRange.StartLine, Is.EqualTo(1));
+            Assert.That(result.NewRange.LinesAffected, Is.EqualTo(3));
         }
 
         private T Parse<T>(string text, Func<DiffParser, Rule<char>> ruleFetcher)
