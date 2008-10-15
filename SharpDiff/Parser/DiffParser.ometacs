@@ -2,14 +2,16 @@ using System.Collections.Generic;
 using OMetaSharp;
 
 ometa SharpDiff.DiffParser : Parser {
-	Diff			= Header:header NewLine IndexHeader NewLine Chunk:chunk
-																		-> { new Diff(header.As<Header>(), chunk.As<Chunk>()) },
+	Diff			= Header:header NewLine IndexHeader NewLine Chunks:chunks
+																		-> { new Diff(header.As<Header>(), chunks.ToIEnumerable<Chunk>()) },
 	Header			= "diff" Space FormatType:format FileDefs:files		-> { new Header(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) }
 					| "diff" Space FormatType:format					-> { new Header(format.As<FormatType>()) },
 	IndexHeader		= "index" Space HashRange:range Space Number:mode	-> { new IndexHeader(range.As<HashRange>(), mode.As<int>()) },
-	Chunk			= ChunkHeader:header NewLine ChunkRange:range NewLine DiffLines:lines
-																		-> { new Chunk(header.As<ChunkHeader>(), range.As<ChunkRange>(), lines.ToIEnumerable<ILine>()) }
-					| ChunkHeader:header NewLine ChunkRange:range		-> { new Chunk(header.As<ChunkHeader>(), range.As<ChunkRange>(), new List<ILine>()) },
+	Chunks			= (ChunkHeader NewLine | Empty) Chunk+:chunks
+																		-> { chunks },
+	Chunk			= ChunkRange:range (NewLine | Empty) DiffLines:lines (NewLine | Empty)
+																		-> { new Chunk(range.As<ChunkRange>(), lines.ToIEnumerable<ILine>()) }
+					| ChunkRange:range (NewLine | Empty)				-> { new Chunk(range.As<ChunkRange>(), new List<ILine>()) },
 	
 					
 	ChunkHeader		= "---" FileDef:originalFile NewLine "+++" FileDef:newFile
@@ -28,7 +30,7 @@ ometa SharpDiff.DiffParser : Parser {
 	SubtractionLine		= "-" Line:value									-> { new SubtractionLine(value.As<string>()) },
 	NoNewLineAtEOFLine	= '\\' Space "No newline at end of file" NewLine	-> { new NoNewLineAtEOFLine() }
 						| '\\' Space "No newline at end of file"			-> { new NoNewLineAtEOFLine() },
-	Line				= Text:value NewLine								-> { value.As<string>() },
+	Line				= (Text | Empty -> { "" }):value NewLine			-> { value.As<string>() },
 	FileDefs		= FileDef+:files									-> { files },
 	FileDef			= Space Letter:letter "/" Filename:filename			-> { new FileDef(letter.As<char>(), filename.As<string>()) }
 					| Letter:letter "/" Filename:filename				-> { new FileDef(letter.As<char>(), filename.As<string>()) },

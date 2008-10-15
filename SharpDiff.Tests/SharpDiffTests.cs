@@ -127,19 +127,9 @@ namespace SharpDiff.Tests
         [Test]
         public void ChunkHeaderReturnedForAddRemoveFileHeader()
         {
-            var result = Parse<ChunkHeader>("--- a/SmallTextFile.txt\r\n+++ b/SmallTextFile.txt", x => x.ChunkHeader);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.OriginalFile.Letter, Is.EqualTo('a'));
-            Assert.That(result.OriginalFile.FileName, Is.EqualTo("SmallTextFile.txt"));
-            Assert.That(result.NewFile.Letter, Is.EqualTo('b'));
-            Assert.That(result.NewFile.FileName, Is.EqualTo("SmallTextFile.txt"));
-        }
-
-        [Test]
-        public void ChunkReturnedWithHeader()
-        {
-            var result = Parse<Chunk>("--- a/SmallTextFile.txt\r\n+++ b/SmallTextFile.txt\r\n@@ -1,30 +1,3 @@", x => x.Chunk);
+            var result = Parse<ChunkHeader>(
+                "--- a/SmallTextFile.txt\r\n" +
+                "+++ b/SmallTextFile.txt", x => x.ChunkHeader);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.OriginalFile.Letter, Is.EqualTo('a'));
@@ -181,9 +171,43 @@ namespace SharpDiff.Tests
         }
 
         [Test]
+        public void CanParseChunkRangeWhenOnSameLineAsDiffLine()
+        {
+            var result = Parse<ChunkRange>("@@ -11,8 +11,6 @@ namespace SharpDiff\r\n", x => x.ChunkRange);
+
+            Assert.That(result.OriginalRange.StartLine, Is.EqualTo(11));
+            Assert.That(result.OriginalRange.LinesAffected, Is.EqualTo(8));
+            Assert.That(result.NewRange.StartLine, Is.EqualTo(11));
+            Assert.That(result.NewRange.LinesAffected, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void CanParseLineWhenOnSameLineAsChunkRange()
+        {
+            var result = Parse<Diff>(
+                "diff --git a/SmallTextFile.txt b/SmallTextFile.txt\r\n" +
+                "index f1c2d64..a59864c 100644\r\n" +
+                "--- a/SmallTextFile.txt\r\n" +
+                "+++ b/SmallTextFile.txt\r\n" +
+                "@@ -11,8 +11,6 @@ namespace SharpDiff\r\n", x => x.Diff);
+
+            var chunk = result.Chunks[0];
+
+            Assert.That(chunk.OriginalRange.StartLine, Is.EqualTo(11));
+            Assert.That(chunk.OriginalRange.LinesAffected, Is.EqualTo(8));
+            Assert.That(chunk.NewRange.StartLine, Is.EqualTo(11));
+            Assert.That(chunk.NewRange.LinesAffected, Is.EqualTo(6));
+
+            chunk.Lines
+                .AssertItem(0, Is.TypeOf<ContextLine>())
+                .AssertItem(0, item => Assert.That(item.Value, Is.EqualTo("namespace SharpDiff")));
+        }
+
+        [Test]
         public void ChunkHasChunkRange()
         {
-            var result = Parse<Chunk>("--- a/SmallTextFile.txt\r\n+++ b/SmallTextFile.txt\r\n@@ -1,30 +1,3 @@", x => x.Chunk);
+            var result = Parse<Chunk>(
+                "@@ -1,30 +1,3 @@", x => x.Chunk);
 
             Assert.That(result.OriginalRange.StartLine, Is.EqualTo(1));
             Assert.That(result.OriginalRange.LinesAffected, Is.EqualTo(30));
@@ -200,6 +224,14 @@ namespace SharpDiff.Tests
         }
 
         [Test]
+        public void EmptyContextLine()
+        {
+            ILine result = Parse<ContextLine>(" \r\n", x => x.ContextLine);
+
+            Assert.That(result.Value, Is.EqualTo(""));
+        }
+
+        [Test]
         public void LinePrefixedWithAPlusIsAnAdditionLine()
         {
             ILine result = Parse<AdditionLine>("+This is an addition line\r\n", x => x.AdditionLine);
@@ -208,11 +240,27 @@ namespace SharpDiff.Tests
         }
 
         [Test]
+        public void EmptyAdditionLine()
+        {
+            ILine result = Parse<AdditionLine>("+\r\n", x => x.AdditionLine);
+
+            Assert.That(result.Value, Is.EqualTo(""));
+        }
+
+        [Test]
         public void LinePrefixedWithASpaceIsASubtractionLine()
         {
             ILine result = Parse<SubtractionLine>("-This is a subtraction line\r\n", x => x.SubtractionLine);
 
             Assert.That(result.Value, Is.EqualTo("This is a subtraction line"));
+        }
+
+        [Test]
+        public void EmptySubtractionLine()
+        {
+            ILine result = Parse<SubtractionLine>("-\r\n", x => x.SubtractionLine);
+
+            Assert.That(result.Value, Is.EqualTo(""));
         }
 
         [Test]
@@ -247,8 +295,6 @@ namespace SharpDiff.Tests
         public void ChunkReturnedWithLines()
         {
             var result = Parse<Chunk>(
-                "--- a/SmallTextFile.txt\r\n" +
-                "+++ b/SmallTextFile.txt\r\n" +
                 "@@ -1,30 +1,3 @@\r\n" +
                 " This is a context line\r\n" +
                 "+This is an addition line\r\n" +
@@ -258,6 +304,55 @@ namespace SharpDiff.Tests
             Assert.That(result.Lines[0], Is.TypeOf<ContextLine>());
             Assert.That(result.Lines[1], Is.TypeOf<AdditionLine>());
             Assert.That(result.Lines[2], Is.TypeOf<SubtractionLine>());
+        }
+
+        [Test]
+        public void MultipleChunksParsed()
+        {
+            var result = ParseList<Chunk>(
+                "@@ -11,8 +11,6 @@ namespace SharpDiff\r\n" +
+                "@@ -26,5 +24,15 @@ namespace SharpDiff\r\n", x => x.Chunks);
+
+            var list = new List<Chunk>(result);
+
+            Assert.That(list.Count, Is.EqualTo(2));
+
+            var firstChunk = list[0];
+            var secondChunk = list[1];
+
+            Assert.That(firstChunk.OriginalRange.StartLine, Is.EqualTo(11));
+            Assert.That(firstChunk.OriginalRange.LinesAffected, Is.EqualTo(8));
+            Assert.That(firstChunk.NewRange.StartLine, Is.EqualTo(11));
+            Assert.That(firstChunk.NewRange.LinesAffected, Is.EqualTo(6));
+            Assert.That(secondChunk.OriginalRange.StartLine, Is.EqualTo(26));
+            Assert.That(secondChunk.OriginalRange.LinesAffected, Is.EqualTo(5));
+            Assert.That(secondChunk.NewRange.StartLine, Is.EqualTo(24));
+            Assert.That(secondChunk.NewRange.LinesAffected, Is.EqualTo(15));
+        }
+
+        [Test]
+        public void MultipleChunksLinesParsed()
+        {
+            var result = ParseList<Chunk>(
+                "@@ -11,8 +11,6 @@ namespace SharpDiff\r\n" +
+                "+        [Test]\r\n" +
+                "@@ -26,5 +24,15 @@ namespace SharpDiff\r\n" +
+                "-            var result = Parse<ChangeRange>(\"-1,30\", x => x.ChangeRange);\r\n", x => x.Chunks);
+
+            var list = new List<Chunk>(result);
+
+            Assert.That(list.Count, Is.EqualTo(2));
+
+            var firstChunk = list[0];
+            var secondChunk = list[1];
+
+            // there are two lines per chunk, the first is appended to the range!
+            Assert.That(firstChunk.Lines.Count, Is.EqualTo(2));
+            Assert.That(firstChunk.Lines[0], Is.TypeOf<ContextLine>());
+            Assert.That(firstChunk.Lines[1], Is.TypeOf<AdditionLine>());
+            Assert.That(secondChunk.Lines.Count, Is.EqualTo(2));
+            Assert.That(secondChunk.Lines[0], Is.TypeOf<ContextLine>());
+            Assert.That(secondChunk.Lines[1], Is.TypeOf<SubtractionLine>());
         }
 
         [Test, Explicit]
@@ -294,6 +389,44 @@ namespace SharpDiff.Tests
                 "+inside, nothing much.\r\n" +
                 "+\r\n" +
                 "+You like it, right?\r\n", x => x.Diff);
+
+            Assert.That(result, Is.Not.Null);
+        }
+
+        [Test, Explicit]
+        public void TwoChunkFile()
+        {
+            var result = Parse<Diff>(
+                "diff --git a/code.cs b/code.cs\r\n" +
+                "index 9610949..45fb865 100644\r\n" +
+                "--- a/code.cs\r\n" +
+                "+++ b/code.cs\r\n" +
+                "@@ -11,8 +11,6 @@ namespace SharpDiff\r\n" +
+                "             var contents = File.ReadAllText(\"Parser\\DiffParser.ometacs\");\r\n" +
+                "             var result = Grammars.ParseGrammarThenOptimizeThenTranslate\r\n" +
+                "                 <OMetaParser, OMetaOptimizer, OMetaTranslator>();\r\n" +
+                "-\r\n" +
+                "-            File.WriteAllText(@\"C:\\Development\\SharpDiff\\SharpDiff\\Parser\\DiffParser.cs\", result);\r\n" +
+                "         }\r\n" +
+                "         \r\n" +
+                "         [Test]\r\n" +
+                "@@ -26,5 +24,15 @@ namespace SharpDiff\r\n" +
+                "             Assert.That(result.NewRange.StartLine, Is.EqualTo(1));\r\n" +
+                "             Assert.That(result.NewRange.LinesAffected, Is.EqualTo(3));\r\n" +
+                "         }\r\n" +
+                "+		\r\n" +
+                "+		        [Test]\r\n" +
+                "+        public void OriginalChangeRangeParsed()\r\n" +
+                "+        {\r\n" +
+                "+            var result = Parse<ChangeRange>(\"-1,30\", x => x.ChangeRange);\r\n" +
+                "+\r\n" +
+                "+            Assert.That(result, Is.Not.Null);\r\n" +
+                "+            Assert.That(result.StartLine, Is.EqualTo(1));\r\n" +
+                "+            Assert.That(result.LinesAffected, Is.EqualTo(30));\r\n" +
+                "+        }\r\n" +
+                "     }\r\n" +
+                " }\r\n" +
+                "\\ No newline at end of file\r\n", x => x.Diff);
 
             Assert.That(result, Is.Not.Null);
         }

@@ -4,24 +4,12 @@ namespace SharpDiff
 {
     public class Chunk
     {
-        private readonly ChunkHeader header;
         private readonly ChunkRange range;
 
-        public Chunk(ChunkHeader header, ChunkRange range, IEnumerable<ILine> lines)
+        public Chunk(ChunkRange range, IEnumerable<ILine> lines)
         {
-            this.header = header;
             this.range = range;
             Lines = new List<ILine>(lines);
-        }
-
-        public FileDef OriginalFile
-        {
-            get { return header.OriginalFile; }
-        }
-
-        public FileDef NewFile
-        {
-            get { return header.NewFile; }
         }
 
         public ChangeRange OriginalRange

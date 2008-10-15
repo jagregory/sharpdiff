@@ -1,15 +1,17 @@
+using System.Collections.Generic;
+
 namespace SharpDiff
 {
     public class Diff
     {
         private Header header;
 
-        public Diff(Header header, Chunk chunk)
+        public Diff(Header header, IEnumerable<Chunk> chunks)
         {
             this.header = header;
-            Chunk = chunk;
+            Chunks = new List<Chunk>(chunks);
         }
 
-        public Chunk Chunk { get; private set; }
+        public IList<Chunk> Chunks { get; private set; }
     }
 }
