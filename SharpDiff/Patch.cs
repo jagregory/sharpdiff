@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using SharpDiff.Core;
+using SharpDiff.FileStructure;
 
 namespace SharpDiff
 {
     public class Patch
     {
-        private Diff diff;
+        private readonly Diff diff;
         public IFileAccessor File { get; set;}
 
         public Patch(Diff diff)

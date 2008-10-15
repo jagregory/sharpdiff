@@ -1,4 +1,6 @@
-namespace SharpDiff
+using SharpDiff.FileStructure;
+
+namespace SharpDiff.FileStructure
 {
     public class IndexHeader
     {

@@ -1,4 +1,4 @@
-namespace SharpDiff
+namespace SharpDiff.Core
 {
     public interface IFileAccessor
     {

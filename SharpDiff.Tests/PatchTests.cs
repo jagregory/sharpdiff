@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using SharpDiff.Core;
+using SharpDiff.FileStructure;
 
 namespace SharpDiff.Tests
 {

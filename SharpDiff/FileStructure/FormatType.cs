@@ -1,4 +1,4 @@
-namespace SharpDiff
+namespace SharpDiff.FileStructure
 {
     public class FormatType
     {

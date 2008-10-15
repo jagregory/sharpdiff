@@ -53,30 +53,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdditionLine.cs" />
-    <Compile Include="ChangeRange.cs" />
-    <Compile Include="Chunk.cs" />
-    <Compile Include="ChunkHeader.cs" />
-    <Compile Include="ChunkRange.cs" />
-    <Compile Include="ContextLine.cs" />
-    <Compile Include="Diff.cs" />
-    <Compile Include="FileAccessor.cs" />
-    <Compile Include="FileDef.cs" />
-    <Compile Include="FormatType.cs" />
-    <Compile Include="IFileAccessor.cs" />
-    <Compile Include="ILine.cs" />
-    <Compile Include="NoNewLineAtEOFLine.cs" />
-    <Compile Include="Parser\DiffParser.cs" />
-    <Compile Include="HashRange.cs" />
-    <Compile Include="Header.cs" />
-    <Compile Include="IndexHeader.cs" />
+    <Compile Include="FileStructure\AdditionLine.cs" />
+    <Compile Include="FileStructure\ChangeRange.cs" />
+    <Compile Include="FileStructure\Chunk.cs" />
+    <Compile Include="FileStructure\ChunkHeader.cs" />
+    <Compile Include="FileStructure\ChunkRange.cs" />
+    <Compile Include="FileStructure\ContextLine.cs" />
+    <Compile Include="FileStructure\Diff.cs" />
+    <Compile Include="Core\FileAccessor.cs" />
+    <Compile Include="FileStructure\FileDef.cs" />
+    <Compile Include="FileStructure\FormatType.cs" />
+    <Compile Include="Core\IFileAccessor.cs" />
+    <Compile Include="FileStructure\ILine.cs" />
+    <Compile Include="FileStructure\NoNewLineAtEOFLine.cs" />
+    <Compile Include="Parser\GitDiffParser.cs" />
+    <Compile Include="FileStructure\HashRange.cs" />
+    <Compile Include="FileStructure\Header.cs" />
+    <Compile Include="FileStructure\IndexHeader.cs" />
     <Compile Include="InvalidDiffFormatException.cs" />
     <Compile Include="Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubtractionLine.cs" />
+    <Compile Include="FileStructure\SubtractionLine.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Parser\DiffParser.ometacs">
+    <None Include="Parser\GitDiffParser.ometacs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

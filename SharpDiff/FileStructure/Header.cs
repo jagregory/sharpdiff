@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using SharpDiff.FileStructure;
 
-namespace SharpDiff
+namespace SharpDiff.FileStructure
 {
     public class Header
     {

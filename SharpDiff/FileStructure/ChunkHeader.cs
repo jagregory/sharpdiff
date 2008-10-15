@@ -1,11 +1,11 @@
-namespace SharpDiff
+namespace SharpDiff.FileStructure
 {
     public class ChunkHeader
     {
         public ChunkHeader(FileDef originalFile, FileDef newFile)
         {
-            this.OriginalFile = originalFile;
-            this.NewFile = newFile;
+            OriginalFile = originalFile;
+            NewFile = newFile;
         }
 
         public FileDef OriginalFile { get; private set; }

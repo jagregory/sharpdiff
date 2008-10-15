@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using SharpDiff.FileStructure;
 
 namespace SharpDiff.Tests
 {

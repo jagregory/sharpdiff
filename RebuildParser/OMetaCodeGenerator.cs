@@ -6,9 +6,9 @@ namespace SharpDiff.RebuildParser
 {
     public class OMetaCodeGenerator
     {
-        public void Rebuild()
+        public void RebuildGitParser()
         {
-            var contents = File.ReadAllText(@"..\..\..\SharpDiff\Parser\DiffParser.ometacs");
+            var contents = File.ReadAllText(@"..\..\..\SharpDiff\Parser\GitDiffParser.ometacs");
             var result = Grammars.ParseGrammarThenOptimizeThenTranslate
                 <OMetaParser, OMetaOptimizer, OMetaTranslator>
                 (contents,
@@ -16,7 +16,7 @@ namespace SharpDiff.RebuildParser
                  o => o.OptimizeGrammar,
                  t => t.Trans);
 
-            File.WriteAllText(@"..\..\..\SharpDiff\Parser\DiffParser.cs", result);
+            File.WriteAllText(@"..\..\..\SharpDiff\Parser\GitDiffParser.cs", result);
         }
     }
 }

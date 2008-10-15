@@ -4,7 +4,7 @@
     {
         static void Main()
         {
-            new OMetaCodeGenerator().Rebuild(); ;
+            new OMetaCodeGenerator().RebuildGitParser(); ;
         }
     }
 }

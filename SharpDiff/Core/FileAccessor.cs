@@ -1,6 +1,7 @@
 using System.IO;
+using SharpDiff.Core;
 
-namespace SharpDiff
+namespace SharpDiff.Core
 {
     public class FileAccessor : IFileAccessor
     {
