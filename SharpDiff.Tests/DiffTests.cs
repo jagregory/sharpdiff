@@ -8,12 +8,6 @@ namespace SharpDiff.Tests
     [TestFixture]
     public class DiffTests : AbstractParserTestFixture
     {
-        [Test, Explicit]
-        public void RebuildParser()
-        {
-            new OMetaCodeGenerator().Rebuild();
-        }
-
         [Test]
         public void DiffAndFormatParsed()
         {

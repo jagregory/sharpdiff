@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDiff", "SharpDiff.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpDiff.Tests", "..\SharpDiff.Tests\SharpDiff.Tests.csproj", "{8D513BDA-7BC7-4C53-BC9A-B7A186781F62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RebuildParser", "..\RebuildParser\RebuildParser.csproj", "{9EB4BBD1-2173-46B7-BA67-72AC8EBD0086}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{8D513BDA-7BC7-4C53-BC9A-B7A186781F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D513BDA-7BC7-4C53-BC9A-B7A186781F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D513BDA-7BC7-4C53-BC9A-B7A186781F62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EB4BBD1-2173-46B7-BA67-72AC8EBD0086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EB4BBD1-2173-46B7-BA67-72AC8EBD0086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EB4BBD1-2173-46B7-BA67-72AC8EBD0086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EB4BBD1-2173-46B7-BA67-72AC8EBD0086}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
