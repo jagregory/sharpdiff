@@ -74,7 +74,7 @@ namespace SharpDiff.Tests
         [Test]
         public void DiffAndFormatParsed()
         {
-            var result = Parse<Diff>("diff --git", x => x.Header);
+            var result = Parse<Header>("diff --git", x => x.Header);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Format, Is.Not.Null);
@@ -84,7 +84,7 @@ namespace SharpDiff.Tests
         [Test]
         public void DiffAndFormatParsedWithFiles()
         {
-            var result = Parse<Diff>("diff --git a/Filename b/File2.txt", x => x.Header);
+            var result = Parse<Header>("diff --git a/Filename b/File2.txt", x => x.Header);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Format, Is.Not.Null);
@@ -191,6 +191,64 @@ namespace SharpDiff.Tests
             Assert.That(result.NewRange.LinesAffected, Is.EqualTo(3));
         }
 
+        [Test]
+        public void LinePrefixedWithASpaceIsAContextLine()
+        {
+            ILine result = Parse<ContextLine>(" This is a context line\r\n", x => x.ContextLine);
+
+            Assert.That(result.Value, Is.EqualTo("This is a context line"));
+        }
+
+        [Test]
+        public void LinePrefixedWithAPlusIsAnAdditionLine()
+        {
+            ILine result = Parse<AdditionLine>("+This is an addition line\r\n", x => x.AdditionLine);
+
+            Assert.That(result.Value, Is.EqualTo("This is an addition line"));
+        }
+
+        [Test]
+        public void LinePrefixedWithASpaceIsASubtractionLine()
+        {
+            ILine result = Parse<SubtractionLine>("-This is a subtraction line\r\n", x => x.SubtractionLine);
+
+            Assert.That(result.Value, Is.EqualTo("This is a subtraction line"));
+        }
+
+        [Test]
+        public void ChunkReturnedWithLines()
+        {
+            var result = Parse<Chunk>(
+                "--- a/SmallTextFile.txt\r\n" +
+                "+++ b/SmallTextFile.txt\r\n" +
+                "@@ -1,30 +1,3 @@\r\n" +
+                " This is a context line\r\n" +
+                "+This is an addition line\r\n" +
+                "-This is a subtraction line\r\n", x => x.Chunk);
+
+            Assert.That(result.Lines, Is.Not.Null);
+            Assert.That(result.Lines[0], Is.TypeOf<ContextLine>());
+            Assert.That(result.Lines[1], Is.TypeOf<AdditionLine>());
+            Assert.That(result.Lines[2], Is.TypeOf<SubtractionLine>());
+        }
+
+        [Test, Explicit]
+        public void ShowMeTheMoney()
+        {
+            var result = Parse<Diff>(
+                "diff --git a/SmallTextFile.txt b/SmallTextFile.txt\r\n" +
+                "index f1c2d64..c750789 100644\r\n" +
+                "--- a/SmallTextFile.txt\r\n" +
+                "+++ b/SmallTextFile.txt\r\n" +
+                "@@ -1,3 +1,4 @@\r\n" +
+                " This is a small text file\r\n" +
+                "+of my almighty creation,\r\n" +
+                " with a few lines of text\r\n" +
+                " inside, nothing much.\r\n", x => x.Diff);
+
+            Assert.That(result, Is.Not.Null);
+        }
+
         private T Parse<T>(string text, Func<DiffParser, Rule<char>> ruleFetcher)
         {
             return Grammars.ParseWith(text, ruleFetcher).As<T>();
@@ -200,36 +258,5 @@ namespace SharpDiff.Tests
         {
             return Grammars.ParseWith(text, ruleFetcher).ToIEnumerable<T>();
         }
-
-        // @@ -1,3 +1,3 @@
-        // @@ -L,N +L,N @@
-        // L = Start line
-        // N = Lines affected
-
-        /*
-Diff
-  Format
-  Files
-  ChunkHeader
-    OriginalRange
-	NewRange
-	Lines
-		AdditionLine
-		SubtractionLine
-		ContextLine
-         */
-
-        /*
-diff --git a/SmallTextFile.txt b/SmallTextFile.txt
-index f1c2d64..c750789 100644
---- a/SmallTextFile.txt
-+++ b/SmallTextFile.txt
-@@ -1,3 +1,4 @@
- This is a small text file
-+of my almighty creation,
- with a few lines of text
- inside, nothing much.
-\ No newline at end of file
-         */
     }
 }
