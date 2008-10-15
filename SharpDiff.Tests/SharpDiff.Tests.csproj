@@ -68,6 +68,7 @@
     <Compile Include="IndexExtendedHeaderTests.cs" />
     <Compile Include="LineTests.cs" />
     <Compile Include="DiffTests.cs" />
+    <Compile Include="PatchTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
