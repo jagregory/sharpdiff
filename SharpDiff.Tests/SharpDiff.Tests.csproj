@@ -57,8 +57,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractParserTestFixture.cs" />
+    <Compile Include="ChangeRangeTests.cs" />
+    <Compile Include="ChunkRangeTests.cs" />
+    <Compile Include="ChunkTests.cs" />
+    <Compile Include="FilenameTests.cs" />
+    <Compile Include="FormatTests.cs" />
+    <Compile Include="HashRangeTests.cs" />
     <Compile Include="IListExtensions.cs" />
-    <Compile Include="SharpDiffTests.cs" />
+    <Compile Include="IndexExtendedHeaderTests.cs" />
+    <Compile Include="LineTests.cs" />
+    <Compile Include="DiffTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
