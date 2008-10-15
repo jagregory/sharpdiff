@@ -462,6 +462,15 @@ namespace SharpDiff
                 }
                 return MetaRules.Success();
             }
+            ,delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            {
+                modifiedStream2 = inputStream2;
+                if(!MetaRules.Apply(NoNewLineAtEOFLine, modifiedStream2, out result2, out modifiedStream2))
+                {
+                    return MetaRules.Fail(out result2, out modifiedStream2);
+                }
+                return MetaRules.Success();
+            }
             ))
             {
                 return MetaRules.Fail(out result, out modifiedStream);
@@ -538,6 +547,74 @@ namespace SharpDiff
                     result2 = ( new SubtractionLine(value.As<string>()) ).AsHostExpressionList();
                     return MetaRules.Success();
                 }, modifiedStream, out result, out modifiedStream))
+            {
+                return MetaRules.Fail(out result, out modifiedStream);
+            }
+            return MetaRules.Success();
+        }
+        public virtual bool NoNewLineAtEOFLine(OMetaStream<char> inputStream, out OMetaList<HostExpression> result, out OMetaStream <char> modifiedStream)
+        {
+            modifiedStream = inputStream;
+            if(!MetaRules.Or(modifiedStream, out result, out modifiedStream,
+            delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            {
+                modifiedStream2 = inputStream2;
+                if(!MetaRules.Apply(
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.ApplyWithArgs(Exactly, modifiedStream3, out result3, out modifiedStream3, ("\\").AsHostExpressionList()))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(Space, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("No newline at end of file").AsHostExpressionList()))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(NewLine, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        result3 = ( new NoNewLineAtEOFLine() ).AsHostExpressionList();
+                        return MetaRules.Success();
+                    }, modifiedStream2, out result2, out modifiedStream2))
+                {
+                    return MetaRules.Fail(out result2, out modifiedStream2);
+                }
+                return MetaRules.Success();
+            }
+            ,delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            {
+                modifiedStream2 = inputStream2;
+                if(!MetaRules.Apply(
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.ApplyWithArgs(Exactly, modifiedStream3, out result3, out modifiedStream3, ("\\").AsHostExpressionList()))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.Apply(Space, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("No newline at end of file").AsHostExpressionList()))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        result3 = ( new NoNewLineAtEOFLine() ).AsHostExpressionList();
+                        return MetaRules.Success();
+                    }, modifiedStream2, out result2, out modifiedStream2))
+                {
+                    return MetaRules.Fail(out result2, out modifiedStream2);
+                }
+                return MetaRules.Success();
+            }
+            ))
             {
                 return MetaRules.Fail(out result, out modifiedStream);
             }

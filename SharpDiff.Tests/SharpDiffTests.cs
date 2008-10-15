@@ -216,6 +216,34 @@ namespace SharpDiff.Tests
         }
 
         [Test]
+        public void NoNewLineAtEOFLineParsed()
+        {
+            ILine result = Parse<NoNewLineAtEOFLine>("\\ No newline at end of file\r\n", x => x.NoNewLineAtEOFLine);
+
+            Assert.That(result.Value, Is.EqualTo("No newline at end of file"));
+        }
+
+        [Test]
+        public void MultipleLinesParsed()
+        {
+            var result = ParseList<ILine>(
+                " This is a small text file\r\n" +
+                "+that I quite like,\r\n" +
+                " with a few lines of text\r\n" +
+                "-inside, nothing much.\r\n" +
+                "\\ No newline at end of file\r\n" +
+                "+inside, nothing much.\r\n", x => x.DiffLines);
+
+            new List<ILine>(result)
+                .AssertItem(0, Is.TypeOf<ContextLine>())
+                .AssertItem(1, Is.TypeOf<AdditionLine>())
+                .AssertItem(2, Is.TypeOf<ContextLine>())
+                .AssertItem(3, Is.TypeOf<SubtractionLine>())
+                .AssertItem(4, Is.TypeOf<NoNewLineAtEOFLine>())
+                .AssertItem(5, Is.TypeOf<AdditionLine>());
+        }
+
+        [Test]
         public void ChunkReturnedWithLines()
         {
             var result = Parse<Chunk>(
@@ -245,6 +273,27 @@ namespace SharpDiff.Tests
                 "+of my almighty creation,\r\n" +
                 " with a few lines of text\r\n" +
                 " inside, nothing much.\r\n", x => x.Diff);
+
+            Assert.That(result, Is.Not.Null);
+        }
+
+        [Test, Explicit]
+        public void LargerFile()
+        {
+            var result = Parse<Diff>(
+                "diff --git a/SmallTextFile.txt b/SmallTextFile.txt\r\n" +
+                "index f1c2d64..a59864c 100644\r\n" +
+                "--- a/SmallTextFile.txt\r\n" +
+                "+++ b/SmallTextFile.txt\r\n" +
+                "@@ -1,3 +1,6 @@\r\n" +
+                " This is a small text file\r\n" +
+                "+that I quite like,\r\n" +
+                " with a few lines of text\r\n" +
+                "-inside, nothing much.\r\n" +
+                "\\ No newline at end of file\r\n" +
+                "+inside, nothing much.\r\n" +
+                "+\r\n" +
+                "+You like it, right?\r\n", x => x.Diff);
 
             Assert.That(result, Is.Not.Null);
         }

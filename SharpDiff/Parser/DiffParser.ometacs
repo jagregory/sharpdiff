@@ -18,14 +18,17 @@ ometa SharpDiff.DiffParser : Parser {
 																		-> { new ChunkRange(originalRange.As<ChangeRange>(), newRange.As<ChangeRange>()) },
 	ChangeRange		= "+" Number:line "," Number:affected				-> { new ChangeRange(line.As<int>(), affected.As<int>()) }
 					| "-" Number:line "," Number:affected				-> { new ChangeRange(line.As<int>(), affected.As<int>()) },
-	DiffLines		= AnyLine+:lines									-> { lines },
-	AnyLine			= ContextLine
-					| AdditionLine
-					| SubtractionLine,
-	ContextLine		= Space Line:value									-> { new ContextLine(value.As<string>()) },
-	AdditionLine	= "+" Line:value									-> { new AdditionLine(value.As<string>()) },
-	SubtractionLine	= "-" Line:value									-> { new SubtractionLine(value.As<string>()) },
-	Line			= Text:value NewLine								-> { value.As<string>() },
+	DiffLines			= AnyLine+:lines									-> { lines },
+	AnyLine				= ContextLine
+						| AdditionLine
+						| SubtractionLine
+						| NoNewLineAtEOFLine,
+	ContextLine			= Space Line:value									-> { new ContextLine(value.As<string>()) },
+	AdditionLine		= "+" Line:value									-> { new AdditionLine(value.As<string>()) },
+	SubtractionLine		= "-" Line:value									-> { new SubtractionLine(value.As<string>()) },
+	NoNewLineAtEOFLine	= '\\' Space "No newline at end of file" NewLine	-> { new NoNewLineAtEOFLine() }
+						| '\\' Space "No newline at end of file"			-> { new NoNewLineAtEOFLine() },
+	Line				= Text:value NewLine								-> { value.As<string>() },
 	FileDefs		= FileDef+:files									-> { files },
 	FileDef			= Space Letter:letter "/" Filename:filename			-> { new FileDef(letter.As<char>(), filename.As<string>()) }
 					| Letter:letter "/" Filename:filename				-> { new FileDef(letter.As<char>(), filename.As<string>()) },

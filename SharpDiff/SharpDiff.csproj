@@ -63,6 +63,7 @@
     <Compile Include="FileDef.cs" />
     <Compile Include="FormatType.cs" />
     <Compile Include="ILine.cs" />
+    <Compile Include="NoNewLineAtEOFLine.cs" />
     <Compile Include="Parser\DiffParser.cs" />
     <Compile Include="HashRange.cs" />
     <Compile Include="Header.cs" />
