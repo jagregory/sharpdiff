@@ -40,6 +40,35 @@ namespace SharpDiff.Tests
             Assert.That(list[1].FileName, Is.EqualTo("File2.txt"));
         }
 
+        [Test]
+        public void TwoDiffs()
+        {
+            var result = ParseList<Diff>(
+                "diff --git a/SmallTextFile.txt b/SmallTextFile.txt\r\n" +
+                "index f1c2d64..c750789 100644\r\n" +
+                "--- a/SmallTextFile.txt\r\n" +
+                "+++ b/SmallTextFile.txt\r\n" +
+                "@@ -1,3 +1,4 @@\r\n" +
+                " This is a small text file\r\n" +
+                "+of my almighty creation,\r\n" +
+                " with a few lines of text\r\n" +
+                " inside, nothing much.\r\n" +
+                "diff --git a/SmallTextFile.txt b/SmallTextFile.txt\r\n" +
+                "index f1c2d64..c750789 100644\r\n" +
+                "--- a/SmallTextFile.txt\r\n" +
+                "+++ b/SmallTextFile.txt\r\n" +
+                "@@ -1,3 +1,4 @@\r\n" +
+                " This is a small text file\r\n" +
+                "+of my almighty creation,\r\n" +
+                " with a few lines of text\r\n" +
+                " inside, nothing much.\r\n", x => x.Diffs);
+
+            Assert.That(result, Is.Not.Null);
+
+            var list = new List<Diff>(result);
+            Assert.That(list.Count, Is.EqualTo(2));
+        }
+
         [Test, Explicit]
         public void ShowMeTheMoney()
         {
@@ -87,11 +116,11 @@ namespace SharpDiff.Tests
                 "--- a/code.cs\r\n" +
                 "+++ b/code.cs\r\n" +
                 "@@ -11,8 +11,6 @@ namespace SharpDiff\r\n" +
-                "             var contents = File.ReadAllText(\"Parser\\DiffParser.ometacs\");\r\n" +
+                "             var contents = File.ReadAllText(\"Parser\\GitDiffParser.ometacs\");\r\n" +
                 "             var result = Grammars.ParseGrammarThenOptimizeThenTranslate\r\n" +
                 "                 <OMetaParser, OMetaOptimizer, OMetaTranslator>();\r\n" +
                 "-\r\n" +
-                "-            File.WriteAllText(@\"C:\\Development\\SharpDiff\\SharpDiff\\Parser\\DiffParser.cs\", result);\r\n" +
+                "-            File.WriteAllText(@\"C:\\Development\\SharpDiff\\SharpDiff\\Parser\\GitDiffParser.cs\", result);\r\n" +
                 "         }\r\n" +
                 "         \r\n" +
                 "         [Test]\r\n" +

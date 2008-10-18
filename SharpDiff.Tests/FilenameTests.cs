@@ -52,5 +52,25 @@ namespace SharpDiff.Tests
             Assert.That(list[1].Letter, Is.EqualTo('b'));
             Assert.That(list[1].FileName, Is.EqualTo("Second.txt"));
         }
+
+        [Test]
+        public void FilenameWithPathIsParsed()
+        {
+            var result = Parse<FileDef>("a/this/is/the/Filename.txt", x => x.FileDef);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Letter, Is.EqualTo('a'));
+            Assert.That(result.FileName, Is.EqualTo("this/is/the/Filename.txt"));
+        }
+
+        [Test]
+        public void FilenameContainingFullStops()
+        {
+            var result = Parse<FileDef>("a/this.is.the.Filename.txt", x => x.FileDef);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Letter, Is.EqualTo('a'));
+            Assert.That(result.FileName, Is.EqualTo("this.is.the.Filename.txt"));
+        }
     }
 }

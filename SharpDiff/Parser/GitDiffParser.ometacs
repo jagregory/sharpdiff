@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using SharpDiff.FileStructure;
 using OMetaSharp;
 
-ometa SharpDiff.DiffParser : Parser {
+ometa SharpDiff.GitDiffParser : Parser {
+	Diffs			= ((NewLine | Empty) Diff)+:diffs					-> { diffs },
 	Diff			= Header:header NewLine IndexHeader NewLine Chunks:chunks
 																		-> { new Diff(header.As<Header>(), chunks.ToIEnumerable<Chunk>()) },
 	Header			= "diff" Space FormatType:format FileDefs:files		-> { new Header(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) }
@@ -35,13 +36,12 @@ ometa SharpDiff.DiffParser : Parser {
 	FileDefs		= FileDef+:files									-> { files },
 	FileDef			= Space Letter:letter "/" Filename:filename			-> { new FileDef(letter.As<char>(), filename.As<string>()) }
 					| Letter:letter "/" Filename:filename				-> { new FileDef(letter.As<char>(), filename.As<string>()) },
-	FormatType		= "--" LetterOrDigits:format						-> { new FormatType(format.As<string>()) },
-	HashRange		= LetterOrDigits:first ".." LetterOrDigits:second	-> { new HashRange(first.As<string>(), second.As<string>()) },
-	Filename		= LetterOrDigits:filename "." LetterOrDigits:extension
+	FormatType		= "--" LetterOrDigit+:format						-> { new FormatType(format.As<string>()) },
+	HashRange		= LetterOrDigit+:first ".." LetterOrDigit+:second	-> { new HashRange(first.As<string>(), second.As<string>()) },
+	Filename		= (~Space ~NewLine Character)+:filename "." LetterOrDigit+:extension
 																		-> { filename + "." + extension }
-					| LetterOrDigits:filename							-> { filename },
+					| (~Space ~NewLine Character)+:filename									-> { filename },
 	Text			= (~NewLine Character)+:t							-> { t.As<string>() },
-	LetterOrDigits	= LetterOrDigit+:i,
 	Number		   ^= Digit+:ds<string>									-> { int.Parse(ds) },
 	NewLine			= '\r' '\n'
 					| '\n'

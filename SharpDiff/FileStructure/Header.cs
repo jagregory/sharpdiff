@@ -13,11 +13,11 @@ namespace SharpDiff.FileStructure
         public Header(FormatType format, IEnumerable<FileDef> files)
         {
             Format = format;
-            Files = files;
+            Files = new List<FileDef>(files);
         }
 
         public FormatType Format { get; private set; }
-        public IEnumerable<FileDef> Files { get; private set; }
+        public IList<FileDef> Files { get; private set; }
 
         public override string ToString()
         {

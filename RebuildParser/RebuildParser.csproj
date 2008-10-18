@@ -8,10 +8,11 @@
     <ProjectGuid>{9EB4BBD1-2173-46B7-BA67-72AC8EBD0086}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpDiff.RebuildParser</RootNamespace>
+    <RootNamespace>SharpDiff.Utils.RebuildParser</RootNamespace>
     <AssemblyName>RebuildParser</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <StartupObject>SharpDiff.Utils.RebuildParser.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

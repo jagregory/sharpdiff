@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using OMetaSharp;
 
-namespace SharpDiff.RebuildParser
+namespace SharpDiff.Utils.RebuildParser
 {
     public class OMetaCodeGenerator
     {
