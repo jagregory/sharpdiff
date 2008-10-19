@@ -25,5 +25,15 @@ namespace SharpDiff.Tests
             Assert.That(result.StartLine, Is.EqualTo(1));
             Assert.That(result.LinesAffected, Is.EqualTo(3));
         }
+
+        [Test]
+        public void AdditionsToEmptyFile()
+        {
+            var result = Parse<ChangeRange>("+1", x => x.ChangeRange);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.StartLine, Is.EqualTo(1));
+            Assert.That(result.LinesAffected, Is.EqualTo(1));
+        }
     }
 }

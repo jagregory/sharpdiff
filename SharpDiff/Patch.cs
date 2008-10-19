@@ -23,16 +23,23 @@ namespace SharpDiff
 
             foreach (var chunk in diff.Chunks)
             {
-                var insertLocation = chunk.NewRange.StartLine;
+                var lineLocation = chunk.NewRange.StartLine - 1; // zero-index the start line 
+
+                if (lineLocation < 0)
+                    lineLocation = 0;
 
                 foreach (var line in chunk.Lines)
                 {
                     // this smells
                     if (line is AdditionLine)
+                        fileLines.Insert(lineLocation, line.Value);
+                    if (line is SubtractionLine)
                     {
-                        fileLines.Insert(insertLocation, line.Value);
-                        insertLocation++;
+                        fileLines.RemoveAt(lineLocation);
+                        continue;
                     }
+
+                    lineLocation++;
                 }
             }
 

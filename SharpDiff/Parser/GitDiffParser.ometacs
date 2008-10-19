@@ -20,8 +20,8 @@ ometa SharpDiff.GitDiffParser : Parser {
 																		-> { new ChunkHeader(originalFile.As<FileDef>(), newFile.As<FileDef>()) },
 	ChunkRange		= "@@" Space ChangeRange:originalRange Space ChangeRange:newRange Space "@@"
 																		-> { new ChunkRange(originalRange.As<ChangeRange>(), newRange.As<ChangeRange>()) },
-	ChangeRange		= "+" Number:line "," Number:affected				-> { new ChangeRange(line.As<int>(), affected.As<int>()) }
-					| "-" Number:line "," Number:affected				-> { new ChangeRange(line.As<int>(), affected.As<int>()) },
+	ChangeRange		= ("+" | "-") Number:line "," Number:affected		-> { new ChangeRange(line.As<int>(), affected.As<int>()) }
+					| ("+" | "-") Number:line							-> { new ChangeRange(line.As<int>(), 1) },
 	DiffLines			= AnyLine+:lines									-> { lines },
 	AnyLine				= ContextLine
 						| AdditionLine

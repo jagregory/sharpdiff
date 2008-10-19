@@ -512,7 +512,26 @@ namespace SharpDiff
                     delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
                     {
                         modifiedStream3 = inputStream3;
-                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("+").AsHostExpressionList()))
+                        if(!MetaRules.Or(modifiedStream3, out result3, out modifiedStream3,
+                        delegate(OMetaStream<char> inputStream4, out OMetaList<HostExpression> result4, out OMetaStream <char> modifiedStream4)
+                        {
+                            modifiedStream4 = inputStream4;
+                            if(!MetaRules.ApplyWithArgs(Token, modifiedStream4, out result4, out modifiedStream4, ("+").AsHostExpressionList()))
+                            {
+                                return MetaRules.Fail(out result4, out modifiedStream4);
+                            }
+                            return MetaRules.Success();
+                        }
+                        ,delegate(OMetaStream<char> inputStream4, out OMetaList<HostExpression> result4, out OMetaStream <char> modifiedStream4)
+                        {
+                            modifiedStream4 = inputStream4;
+                            if(!MetaRules.ApplyWithArgs(Token, modifiedStream4, out result4, out modifiedStream4, ("-").AsHostExpressionList()))
+                            {
+                                return MetaRules.Fail(out result4, out modifiedStream4);
+                            }
+                            return MetaRules.Success();
+                        }
+                        ))
                         {
                             return MetaRules.Fail(out result3, out modifiedStream3);
                         }
@@ -545,7 +564,26 @@ namespace SharpDiff
                     delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
                     {
                         modifiedStream3 = inputStream3;
-                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("-").AsHostExpressionList()))
+                        if(!MetaRules.Or(modifiedStream3, out result3, out modifiedStream3,
+                        delegate(OMetaStream<char> inputStream4, out OMetaList<HostExpression> result4, out OMetaStream <char> modifiedStream4)
+                        {
+                            modifiedStream4 = inputStream4;
+                            if(!MetaRules.ApplyWithArgs(Token, modifiedStream4, out result4, out modifiedStream4, ("+").AsHostExpressionList()))
+                            {
+                                return MetaRules.Fail(out result4, out modifiedStream4);
+                            }
+                            return MetaRules.Success();
+                        }
+                        ,delegate(OMetaStream<char> inputStream4, out OMetaList<HostExpression> result4, out OMetaStream <char> modifiedStream4)
+                        {
+                            modifiedStream4 = inputStream4;
+                            if(!MetaRules.ApplyWithArgs(Token, modifiedStream4, out result4, out modifiedStream4, ("-").AsHostExpressionList()))
+                            {
+                                return MetaRules.Fail(out result4, out modifiedStream4);
+                            }
+                            return MetaRules.Success();
+                        }
+                        ))
                         {
                             return MetaRules.Fail(out result3, out modifiedStream3);
                         }
@@ -554,16 +592,7 @@ namespace SharpDiff
                             return MetaRules.Fail(out result3, out modifiedStream3);
                         }
                         line = result3;
-                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, (",").AsHostExpressionList()))
-                        {
-                            return MetaRules.Fail(out result3, out modifiedStream3);
-                        }
-                        if(!MetaRules.Apply(Number, modifiedStream3, out result3, out modifiedStream3))
-                        {
-                            return MetaRules.Fail(out result3, out modifiedStream3);
-                        }
-                        affected = result3;
-                        result3 = ( new ChangeRange(line.As<int>(), affected.As<int>()) ).AsHostExpressionList();
+                        result3 = ( new ChangeRange(line.As<int>(), 1) ).AsHostExpressionList();
                         return MetaRules.Success();
                     }, modifiedStream2, out result2, out modifiedStream2))
                 {
