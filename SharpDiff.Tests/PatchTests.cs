@@ -134,6 +134,80 @@ namespace SharpDiff.Tests
 
             Assert.That(output, Is.EqualTo(""));
         }
+
+        [Test]
+        public void AdditionsAndRemovalsInSingleFile()
+        {
+            var patch = new Patch(
+                new Diff(null, new[]
+                {
+                    new Chunk(
+                        new ChunkRange(new ChangeRange(3, 9), new ChangeRange(3, 12)), new ILine[]
+                        {
+                            new ContextLine("this"),
+                            new ContextLine("is"),
+                            new ContextLine("a"),
+                            new AdditionLine("here"),
+                            new AdditionLine("are"),
+                            new ContextLine("load"),
+                            new ContextLine("of"),
+                            new SubtractionLine("new"),
+                            new AdditionLine("some"),
+                            new AdditionLine("additions"),
+                            new ContextLine("lines"),
+                            new ContextLine("for"),
+                            new ContextLine("complicating")
+                        }), 
+                })
+            );
+
+            //@@ -3,9 +3,12 @@
+            // this
+            // is
+            // a
+            //+here
+            //+are
+            // load
+            // of
+            //-new
+            //+some
+            //+additions
+            // lines
+            // for
+            // complicating
+
+            patch.File = new StubFileAccessor(
+                "hello\r\n" +
+                "there\r\n" +
+                "this\r\n" +
+                "is\r\n" +
+                "a\r\n" +
+                "load\r\n" +
+                "of\r\n" +
+                "new\r\n" +
+                "lines\r\n" +
+                "for\r\n" +
+                "complicating\r\n" +
+                "matters\r\n");
+            var output = patch.ApplyTo("fake path");
+
+            Assert.That(output, Is.EqualTo(
+                "hello\r\n" +
+                "there\r\n" +
+                "this\r\n" +
+                "is\r\n" +
+                "a\r\n" +
+                "here\r\n" +
+                "are\r\n" +
+                "load\r\n" +
+                "of\r\n" +
+                "some\r\n" +
+                "additions\r\n" +
+                "lines\r\n" +
+                "for\r\n" +
+                "complicating\r\n" +
+                "matters\r\n"));
+        }
     }
 
     internal class StubFileAccessor : IFileAccessor
