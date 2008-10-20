@@ -18,5 +18,15 @@ namespace SharpDiff.FileStructure
 
         public FormatType Format { get; private set; }
         public IList<IFile> Files { get; private set; }
+
+        public bool IsNewFile
+        {
+            get { return Files[0] is NullFile; }
+        }
+
+        public bool IsDeletion
+        {
+            get { return Files[1] is NullFile; }
+        }
     }
 }

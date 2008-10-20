@@ -986,11 +986,10 @@ namespace SharpDiff
                     delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
                     {
                         modifiedStream3 = inputStream3;
-                        if(!MetaRules.Apply(Filename, modifiedStream3, out result3, out modifiedStream3))
+                        if(!MetaRules.ApplyWithArgs(Token, modifiedStream3, out result3, out modifiedStream3, ("/dev/null").AsHostExpressionList()))
                         {
                             return MetaRules.Fail(out result3, out modifiedStream3);
                         }
-                        filename = result3;
                         result3 = ( new NullFile() ).AsHostExpressionList();
                         return MetaRules.Success();
                     }, modifiedStream2, out result2, out modifiedStream2))

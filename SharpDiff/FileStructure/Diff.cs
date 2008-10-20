@@ -21,6 +21,16 @@ namespace SharpDiff.FileStructure
             get { return header.Files; }
         }
 
+        public bool IsNewFile
+        {
+            get { return header.IsNewFile; }
+        }
+
+        public bool IsDeletion
+        {
+            get { return header.IsDeletion; }
+        }
+
         public static IList<Diff> CreateFrom(string content)
         {
             return new List<Diff>(Grammars.ParseWith<GitDiffParser>(content, x => x.Diffs).ToIEnumerable<Diff>());

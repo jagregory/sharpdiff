@@ -36,7 +36,7 @@ ometa SharpDiff.GitDiffParser : Parser {
 	FileDefs		= FileDef+:files									-> { files },
 	FileDef			= Space Letter:letter "/" Filename:filename			-> { new File(letter.As<char>(), filename.As<string>()) }
 					| Letter:letter "/" Filename:filename				-> { new File(letter.As<char>(), filename.As<string>()) }
-					| Filename:filename									-> { new NullFile() },
+					| "/dev/null"										-> { new NullFile() },
 	FormatType		= "--" LetterOrDigit+:format						-> { new FormatType(format.As<string>()) },
 	HashRange		= LetterOrDigit+:first ".." LetterOrDigit+:second	-> { new HashRange(first.As<string>(), second.As<string>()) },
 	Filename		= (~Space ~NewLine Character)+:filename "." LetterOrDigit+:extension

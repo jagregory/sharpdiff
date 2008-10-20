@@ -71,6 +71,38 @@ namespace SharpDiff.Tests
             Assert.That(list.Count, Is.EqualTo(2));
         }
 
+        [Test]
+        public void IsDeletionIsFalseWhenBothFilenamesArePresent()
+        {
+            var result = Parse<Header>("diff --git a/code.cs b/code.cs\r\n", x => x.Header);
+
+            Assert.That(result.IsDeletion, Is.False);
+        }
+
+        [Test]
+        public void IsDeletionIsTrueWhenRightFileIsNull()
+        {
+            var result = Parse<Header>("diff --git a/code.cs /dev/null\r\n", x => x.Header);
+
+            Assert.That(result.IsDeletion, Is.True);
+        }
+
+        [Test]
+        public void IsNewFileIsFalseWhenBothFilenamesArePresent()
+        {
+            var result = Parse<Header>("diff --git a/code.cs b/code.cs\r\n", x => x.Header);
+
+            Assert.That(result.IsNewFile, Is.False);
+        }
+
+        [Test]
+        public void IsNewFileIsTrueWhenLeftFileIsNull()
+        {
+            var result = Parse<Header>("diff --git /dev/null b/code.cs\r\n", x => x.Header);
+
+            Assert.That(result.IsNewFile, Is.True);
+        }
+
         [Test, Explicit]
         public void ShowMeTheMoney()
         {
