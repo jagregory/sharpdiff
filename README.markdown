@@ -64,3 +64,5 @@ Get Involved
 ------------
 Download and try it out. If you're interested in helping with SharpDiff, then let me know. 
 All comments, suggestions, and contributions are welcome. Feel free to contact me either through github, or my e-mail.
+
+SharpDiff has a [Lighthouse dashboard](http://sharpdiff.lighthouseapp.com/projects/18529-sharpdiff/overview) where you can see any tickets and milestones that are outstanding. You're also welcome to add to that as needed.
