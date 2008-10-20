@@ -7,28 +7,16 @@ namespace SharpDiff.FileStructure
     public class Header
     {
         public Header(FormatType format)
-            : this(format, new List<FileDef>())
+            : this(format, new List<IFile>())
         {}
 
-        public Header(FormatType format, IEnumerable<FileDef> files)
+        public Header(FormatType format, IEnumerable<IFile> files)
         {
             Format = format;
-            Files = new List<FileDef>(files);
+            Files = new List<IFile>(files);
         }
 
         public FormatType Format { get; private set; }
-        public IList<FileDef> Files { get; private set; }
-
-        public override string ToString()
-        {
-            var output = "Header: " + Format.Name + Environment.NewLine;
-
-            foreach (var file in Files)
-            {
-                output += "  " + file.Letter + "/" + file.FileName + Environment.NewLine;
-            }
-
-            return output;
-        }
+        public IList<IFile> Files { get; private set; }
     }
 }

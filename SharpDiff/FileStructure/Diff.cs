@@ -16,7 +16,7 @@ namespace SharpDiff.FileStructure
 
         public IList<Chunk> Chunks { get; private set; }
 
-        public IList<FileDef> Files
+        public IList<IFile> Files
         {
             get { return header.Files; }
         }

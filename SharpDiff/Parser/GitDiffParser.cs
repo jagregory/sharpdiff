@@ -139,7 +139,7 @@ namespace SharpDiff
                             return MetaRules.Fail(out result3, out modifiedStream3);
                         }
                         files = result3;
-                        result3 = ( new Header(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) ).AsHostExpressionList();
+                        result3 = ( new Header(format.As<FormatType>(), files.ToIEnumerable<IFile>()) ).AsHostExpressionList();
                         return MetaRules.Success();
                     }, modifiedStream2, out result2, out modifiedStream2))
                 {
@@ -444,7 +444,7 @@ namespace SharpDiff
                         return MetaRules.Fail(out result2, out modifiedStream2);
                     }
                     newFile = result2;
-                    result2 = ( new ChunkHeader(originalFile.As<FileDef>(), newFile.As<FileDef>()) ).AsHostExpressionList();
+                    result2 = ( new ChunkHeader(originalFile.As<IFile>(), newFile.As<IFile>()) ).AsHostExpressionList();
                     return MetaRules.Success();
                 }, modifiedStream, out result, out modifiedStream))
             {
@@ -942,7 +942,7 @@ namespace SharpDiff
                             return MetaRules.Fail(out result3, out modifiedStream3);
                         }
                         filename = result3;
-                        result3 = ( new FileDef(letter.As<char>(), filename.As<string>()) ).AsHostExpressionList();
+                        result3 = ( new File(letter.As<char>(), filename.As<string>()) ).AsHostExpressionList();
                         return MetaRules.Success();
                     }, modifiedStream2, out result2, out modifiedStream2))
                 {
@@ -971,7 +971,27 @@ namespace SharpDiff
                             return MetaRules.Fail(out result3, out modifiedStream3);
                         }
                         filename = result3;
-                        result3 = ( new FileDef(letter.As<char>(), filename.As<string>()) ).AsHostExpressionList();
+                        result3 = ( new File(letter.As<char>(), filename.As<string>()) ).AsHostExpressionList();
+                        return MetaRules.Success();
+                    }, modifiedStream2, out result2, out modifiedStream2))
+                {
+                    return MetaRules.Fail(out result2, out modifiedStream2);
+                }
+                return MetaRules.Success();
+            }
+            ,delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+            {
+                modifiedStream2 = inputStream2;
+                if(!MetaRules.Apply(
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.Apply(Filename, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        filename = result3;
+                        result3 = ( new NullFile() ).AsHostExpressionList();
                         return MetaRules.Success();
                     }, modifiedStream2, out result2, out modifiedStream2))
                 {

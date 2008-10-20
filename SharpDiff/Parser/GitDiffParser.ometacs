@@ -6,7 +6,7 @@ ometa SharpDiff.GitDiffParser : Parser {
 	Diffs			= ((NewLine | Empty) Diff)+:diffs					-> { diffs },
 	Diff			= Header:header NewLine IndexHeader NewLine Chunks:chunks
 																		-> { new Diff(header.As<Header>(), chunks.ToIEnumerable<Chunk>()) },
-	Header			= "diff" Space FormatType:format FileDefs:files		-> { new Header(format.As<FormatType>(), files.ToIEnumerable<FileDef>()) }
+	Header			= "diff" Space FormatType:format FileDefs:files		-> { new Header(format.As<FormatType>(), files.ToIEnumerable<IFile>()) }
 					| "diff" Space FormatType:format					-> { new Header(format.As<FormatType>()) },
 	IndexHeader		= "index" Space HashRange:range Space Number:mode	-> { new IndexHeader(range.As<HashRange>(), mode.As<int>()) },
 	Chunks			= (ChunkHeader NewLine | Empty) Chunk+:chunks
@@ -17,7 +17,7 @@ ometa SharpDiff.GitDiffParser : Parser {
 	
 					
 	ChunkHeader		= "---" FileDef:originalFile NewLine "+++" FileDef:newFile
-																		-> { new ChunkHeader(originalFile.As<FileDef>(), newFile.As<FileDef>()) },
+																		-> { new ChunkHeader(originalFile.As<IFile>(), newFile.As<IFile>()) },
 	ChunkRange		= "@@" Space ChangeRange:originalRange Space ChangeRange:newRange Space "@@"
 																		-> { new ChunkRange(originalRange.As<ChangeRange>(), newRange.As<ChangeRange>()) },
 	ChangeRange		= ("+" | "-") Number:line "," Number:affected		-> { new ChangeRange(line.As<int>(), affected.As<int>()) }
@@ -34,8 +34,9 @@ ometa SharpDiff.GitDiffParser : Parser {
 						| '\\' Space "No newline at end of file"			-> { new NoNewLineAtEOFLine() },
 	Line				= (Text | Empty -> { "" }):value NewLine			-> { value.As<string>() },
 	FileDefs		= FileDef+:files									-> { files },
-	FileDef			= Space Letter:letter "/" Filename:filename			-> { new FileDef(letter.As<char>(), filename.As<string>()) }
-					| Letter:letter "/" Filename:filename				-> { new FileDef(letter.As<char>(), filename.As<string>()) },
+	FileDef			= Space Letter:letter "/" Filename:filename			-> { new File(letter.As<char>(), filename.As<string>()) }
+					| Letter:letter "/" Filename:filename				-> { new File(letter.As<char>(), filename.As<string>()) }
+					| Filename:filename									-> { new NullFile() },
 	FormatType		= "--" LetterOrDigit+:format						-> { new FormatType(format.As<string>()) },
 	HashRange		= LetterOrDigit+:first ".." LetterOrDigit+:second	-> { new HashRange(first.As<string>(), second.As<string>()) },
 	Filename		= (~Space ~NewLine Character)+:filename "." LetterOrDigit+:extension

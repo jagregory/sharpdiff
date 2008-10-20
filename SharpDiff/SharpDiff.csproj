@@ -61,11 +61,13 @@
     <Compile Include="FileStructure\ContextLine.cs" />
     <Compile Include="FileStructure\Diff.cs" />
     <Compile Include="Core\FileAccessor.cs" />
-    <Compile Include="FileStructure\FileDef.cs" />
+    <Compile Include="FileStructure\File.cs" />
     <Compile Include="FileStructure\FormatType.cs" />
     <Compile Include="Core\IFileAccessor.cs" />
+    <Compile Include="FileStructure\IFile.cs" />
     <Compile Include="FileStructure\ILine.cs" />
     <Compile Include="FileStructure\NoNewLineAtEOFLine.cs" />
+    <Compile Include="FileStructure\NullFile.cs" />
     <Compile Include="Parser\GitDiffParser.cs" />
     <Compile Include="FileStructure\HashRange.cs" />
     <Compile Include="FileStructure\Header.cs" />

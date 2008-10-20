@@ -28,16 +28,18 @@ namespace SharpDiff.Tests
             Assert.That(result.Format, Is.Not.Null);
             Assert.That(result.Format.Name, Is.EqualTo("git"));
 
-            var list = new List<FileDef>(result.Files);
+            var list = new List<IFile>(result.Files);
+            var first = (File)list[0];
+            var second = (File)list[1];
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(list[0], Is.Not.Null);
-            Assert.That(list[0].Letter, Is.EqualTo('a'));
-            Assert.That(list[0].FileName, Is.EqualTo("Filename"));
+            Assert.That(first, Is.Not.Null);
+            Assert.That(first.Letter, Is.EqualTo('a'));
+            Assert.That(first.FileName, Is.EqualTo("Filename"));
 
-            Assert.That(list[1], Is.Not.Null);
-            Assert.That(list[1].Letter, Is.EqualTo('b'));
-            Assert.That(list[1].FileName, Is.EqualTo("File2.txt"));
+            Assert.That(second, Is.Not.Null);
+            Assert.That(second.Letter, Is.EqualTo('b'));
+            Assert.That(second.FileName, Is.EqualTo("File2.txt"));
         }
 
         [Test]

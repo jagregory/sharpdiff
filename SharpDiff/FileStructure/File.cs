@@ -1,8 +1,8 @@
 namespace SharpDiff.FileStructure
 {
-    public class FileDef
+    public class File : IFile
     {
-        public FileDef(char letter, string filename)
+        public File(char letter, string filename)
         {
             Letter = letter;
             FileName = filename;
