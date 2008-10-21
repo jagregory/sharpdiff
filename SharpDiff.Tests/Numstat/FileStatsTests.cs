@@ -23,7 +23,7 @@ namespace SharpDiff.Tests.Numstat
         [Test]
         public void ParsesAdditionsAndSubtractionValues()
         {
-            var result = Parse<FileStats>("3\t8", x => x.FileStats);
+            var result = Parse<FileStats>("3\t8\tanotherFile.txt", x => x.FileStats);
 
             Assert.That(result.Additions, Is.EqualTo(3));
             Assert.That(result.Subtractions, Is.EqualTo(8));
@@ -35,6 +35,14 @@ namespace SharpDiff.Tests.Numstat
             var result = Parse<string>("anotherFile.txt", x => x.Filename);
 
             Assert.That(result, Is.EqualTo("anotherFile.txt"));
+        }
+
+        [Test]
+        public void ParsesFullFileLine()
+        {
+            var result = Parse<FileStats>("3\t8\tanotherFile.txt", x => x.FileStats);
+
+            Assert.That(result.Filename, Is.EqualTo("anotherFile.txt"));
         }
 
         protected T Parse<T>(string text, Func<GitNumstatParser, Rule<char>> ruleFetcher)

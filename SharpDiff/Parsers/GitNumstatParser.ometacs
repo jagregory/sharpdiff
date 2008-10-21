@@ -2,6 +2,7 @@ using SharpDiff.FileStructure.Numstat;
 using OMetaSharp;
 
 ometa SharpDiff.Parsers.GitNumstatParser : Parser {
-	FileStats = Number:adds '\t' Number:subs -> { new FileStats(adds.As<int>(), subs.As<int>()) },
+	FileStats = LineStats:lines '\t' Filename:name -> { new FileStats(lines[0].As<int>(), lines[1].As<int>(), name.As<string>()) },
+	LineStats = Number:adds '\t' Number:subs -> { adds, subs },
 	Filename = LetterOrDigit+:name '.' LetterOrDigit+:ext -> { name.As<string>() + "." + ext.As<string>() }
 }
