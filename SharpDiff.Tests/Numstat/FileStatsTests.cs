@@ -29,6 +29,14 @@ namespace SharpDiff.Tests.Numstat
             Assert.That(result.Subtractions, Is.EqualTo(8));
         }
 
+        [Test]
+        public void ParsesFilename()
+        {
+            var result = Parse<string>("anotherFile.txt", x => x.Filename);
+
+            Assert.That(result, Is.EqualTo("anotherFile.txt"));
+        }
+
         protected T Parse<T>(string text, Func<GitNumstatParser, Rule<char>> ruleFetcher)
         {
             return Grammars.ParseWith(text, ruleFetcher).As<T>();
