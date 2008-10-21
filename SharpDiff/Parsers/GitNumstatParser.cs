@@ -5,6 +5,37 @@ namespace SharpDiff.Parsers
 {
     public class GitNumstatParser : Parser
     {
+        public virtual bool FullFile(OMetaStream<char> inputStream, out OMetaList<HostExpression> result, out OMetaStream <char> modifiedStream)
+        {
+            OMetaList<HostExpression> files = null;
+            modifiedStream = inputStream;
+            if(!MetaRules.Apply(
+                delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+                {
+                    modifiedStream2 = inputStream2;
+                    if(!MetaRules.Many1(
+                        delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                        {
+                            modifiedStream3 = inputStream3;
+                            if(!MetaRules.Apply(FileStats, modifiedStream3, out result3, out modifiedStream3))
+                            {
+                                return MetaRules.Fail(out result3, out modifiedStream3);
+                            }
+                            return MetaRules.Success();
+                        }
+                    , modifiedStream2, out result2, out modifiedStream2))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    files = result2;
+                    result2 = ( files ).AsHostExpressionList();
+                    return MetaRules.Success();
+                }, modifiedStream, out result, out modifiedStream))
+            {
+                return MetaRules.Fail(out result, out modifiedStream);
+            }
+            return MetaRules.Success();
+        }
         public virtual bool FileStats(OMetaStream<char> inputStream, out OMetaList<HostExpression> result, out OMetaStream <char> modifiedStream)
         {
             OMetaList<HostExpression> lines = null;
@@ -28,6 +59,10 @@ namespace SharpDiff.Parsers
                         return MetaRules.Fail(out result2, out modifiedStream2);
                     }
                     name = result2;
+                    if(!MetaRules.Apply(NewLine, modifiedStream2, out result2, out modifiedStream2))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
                     result2 = ( new FileStats(lines[0].As<int>(), lines[1].As<int>(), name.As<string>()) ).AsHostExpressionList();
                     return MetaRules.Success();
                 }, modifiedStream, out result, out modifiedStream))
@@ -111,6 +146,28 @@ namespace SharpDiff.Parsers
                     }
                     ext = result2;
                     result2 = ( name.As<string>() + "." + ext.As<string>() ).AsHostExpressionList();
+                    return MetaRules.Success();
+                }, modifiedStream, out result, out modifiedStream))
+            {
+                return MetaRules.Fail(out result, out modifiedStream);
+            }
+            return MetaRules.Success();
+        }
+        public virtual bool NewLine(OMetaStream<char> inputStream, out OMetaList<HostExpression> result, out OMetaStream <char> modifiedStream)
+        {
+            modifiedStream = inputStream;
+            if(!MetaRules.Apply(
+                delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
+                {
+                    modifiedStream2 = inputStream2;
+                    if(!MetaRules.ApplyWithArgs(Exactly, modifiedStream2, out result2, out modifiedStream2, ("\r").AsHostExpressionList()))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    if(!MetaRules.ApplyWithArgs(Exactly, modifiedStream2, out result2, out modifiedStream2, ("\n").AsHostExpressionList()))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
                     return MetaRules.Success();
                 }, modifiedStream, out result, out modifiedStream))
             {
