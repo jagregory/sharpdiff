@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using OMetaSharp;
 using SharpDiff.FileStructure;
+using SharpDiff.Parsers;
 
 namespace SharpDiff.FileStructure
 {

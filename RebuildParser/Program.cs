@@ -6,7 +6,10 @@ namespace SharpDiff.Utils.RebuildParser
     {
         static void Main()
         {
-            new OMetaCodeGenerator().RebuildGitParser();
+            var generator = new OMetaCodeGenerator();
+            
+            generator.RebuildGitParser();
+            generator.RebuildGitNumstatParser();
         }
     }
 }

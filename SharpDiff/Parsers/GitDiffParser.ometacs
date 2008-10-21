@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using SharpDiff.FileStructure;
 using OMetaSharp;
 
-ometa SharpDiff.GitDiffParser : Parser {
+ometa SharpDiff.Parsers.GitDiffParser : Parser {
 	Diffs			= ((NewLine | Empty) Diff)+:diffs					-> { diffs },
 	Diff			= Header:header NewLine IndexHeader NewLine Chunks:chunks
 																		-> { new Diff(header.As<Header>(), chunks.ToIEnumerable<Chunk>()) },

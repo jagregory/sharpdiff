@@ -8,7 +8,7 @@ namespace SharpDiff.Utils.RebuildParser
     {
         public void RebuildGitParser()
         {
-            var contents = File.ReadAllText(@"..\..\..\SharpDiff\Parser\GitDiffParser.ometacs");
+            var contents = File.ReadAllText(@"..\..\..\SharpDiff\Parsers\GitDiffParser.ometacs");
             var result = Grammars.ParseGrammarThenOptimizeThenTranslate
                 <OMetaParser, OMetaOptimizer, OMetaTranslator>
                 (contents,
@@ -16,7 +16,20 @@ namespace SharpDiff.Utils.RebuildParser
                  o => o.OptimizeGrammar,
                  t => t.Trans);
 
-            File.WriteAllText(@"..\..\..\SharpDiff\Parser\GitDiffParser.cs", result);
+            File.WriteAllText(@"..\..\..\SharpDiff\Parsers\GitDiffParser.cs", result);
+        }
+
+        public void RebuildGitNumstatParser()
+        {
+            var contents = File.ReadAllText(@"..\..\..\SharpDiff\Parsers\GitNumstatParser.ometacs");
+            var result = Grammars.ParseGrammarThenOptimizeThenTranslate
+                <OMetaParser, OMetaOptimizer, OMetaTranslator>
+                (contents,
+                 p => p.Grammar,
+                 o => o.OptimizeGrammar,
+                 t => t.Trans);
+
+            File.WriteAllText(@"..\..\..\SharpDiff\Parsers\GitNumstatParser.cs", result);
         }
     }
 }

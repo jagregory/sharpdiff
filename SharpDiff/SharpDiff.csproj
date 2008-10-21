@@ -68,17 +68,22 @@
     <Compile Include="FileStructure\ILine.cs" />
     <Compile Include="FileStructure\NoNewLineAtEOFLine.cs" />
     <Compile Include="FileStructure\NullFile.cs" />
-    <Compile Include="Parser\GitDiffParser.cs" />
+    <Compile Include="FileStructure\Numstat\FileStats.cs" />
+    <Compile Include="Parsers\GitDiffParser.cs" />
     <Compile Include="FileStructure\HashRange.cs" />
     <Compile Include="FileStructure\Header.cs" />
     <Compile Include="FileStructure\IndexHeader.cs" />
     <Compile Include="InvalidDiffFormatException.cs" />
+    <Compile Include="Parsers\GitNumstatParser.cs" />
     <Compile Include="Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileStructure\SubtractionLine.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Parser\GitDiffParser.ometacs">
+    <None Include="Parsers\GitNumstatParser.ometacs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Parsers\GitDiffParser.ometacs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

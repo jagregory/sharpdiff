@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using OMetaSharp;
+using SharpDiff.Parsers;
 
 namespace SharpDiff.Tests
 {
