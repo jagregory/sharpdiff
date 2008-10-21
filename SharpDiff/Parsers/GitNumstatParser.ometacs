@@ -1,4 +1,6 @@
+using SharpDiff.FileStructure.Numstat;
 using OMetaSharp;
 
 ometa SharpDiff.Parsers.GitNumstatParser : Parser {
+	FileStats = Number:adds '\t' Number:subs -> { new FileStats(adds.As<int>(), subs.As<int>()) }
 }
