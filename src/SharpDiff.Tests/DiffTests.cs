@@ -103,7 +103,7 @@ namespace SharpDiff.Tests
             Assert.That(result.IsNewFile, Is.True);
         }
 
-        [Test, Explicit]
+        [Test]
         public void ShowMeTheMoney()
         {
             var result = Parse<Diff>(
@@ -120,7 +120,7 @@ namespace SharpDiff.Tests
             Assert.That(result, Is.Not.Null);
         }
 
-        [Test, Explicit]
+        [Test]
         public void LargerFile()
         {
             var result = Parse<Diff>(
@@ -141,7 +141,7 @@ namespace SharpDiff.Tests
             Assert.That(result, Is.Not.Null);
         }
 
-        [Test, Explicit]
+        [Test]
         public void TwoChunkFile()
         {
             var result = Parse<Diff>(
