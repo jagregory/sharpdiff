@@ -63,8 +63,10 @@ namespace SharpDiff.Tests
         {
             var result = ParseList<Chunk>(
                 "@@ -11,8 +11,6 @@ namespace SharpDiff\r\n" +
+                " public class Tests {\r\n" +
                 "+        [Test]\r\n" +
                 "@@ -26,5 +24,15 @@ namespace SharpDiff\r\n" +
+                "         [Test]\r\n" +
                 "-            var result = Parse<ChangeRange>(\"-1,30\", x => x.ChangeRange);\r\n", x => x.Chunks);
 
             var list = new List<Chunk>(result);
@@ -74,7 +76,7 @@ namespace SharpDiff.Tests
             var firstChunk = list[0];
             var secondChunk = list[1];
 
-            // there are two lines per chunk, the first is appended to the range!
+            // there are two lines per chunk, we should ignore the extra data after the range
             Assert.That(firstChunk.Lines.Count, Is.EqualTo(2));
             Assert.That(firstChunk.Lines[0], Is.TypeOf<ContextLine>());
             Assert.That(firstChunk.Lines[1], Is.TypeOf<AdditionLine>());

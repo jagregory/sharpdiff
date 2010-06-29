@@ -305,29 +305,6 @@ namespace SharpDiff.Parsers
                             return MetaRules.Fail(out result3, out modifiedStream3);
                         }
                         range = result3;
-                        if(!MetaRules.Or(modifiedStream3, out result3, out modifiedStream3,
-                        delegate(OMetaStream<char> inputStream4, out OMetaList<HostExpression> result4, out OMetaStream <char> modifiedStream4)
-                        {
-                            modifiedStream4 = inputStream4;
-                            if(!MetaRules.Apply(NewLine, modifiedStream4, out result4, out modifiedStream4))
-                            {
-                                return MetaRules.Fail(out result4, out modifiedStream4);
-                            }
-                            return MetaRules.Success();
-                        }
-                        ,delegate(OMetaStream<char> inputStream4, out OMetaList<HostExpression> result4, out OMetaStream <char> modifiedStream4)
-                        {
-                            modifiedStream4 = inputStream4;
-                            if(!MetaRules.Apply(Empty, modifiedStream4, out result4, out modifiedStream4))
-                            {
-                                return MetaRules.Fail(out result4, out modifiedStream4);
-                            }
-                            return MetaRules.Success();
-                        }
-                        ))
-                        {
-                            return MetaRules.Fail(out result3, out modifiedStream3);
-                        }
                         if(!MetaRules.Apply(DiffLines, modifiedStream3, out result3, out modifiedStream3))
                         {
                             return MetaRules.Fail(out result3, out modifiedStream3);
@@ -456,6 +433,7 @@ namespace SharpDiff.Parsers
         {
             OMetaList<HostExpression> originalRange = null;
             OMetaList<HostExpression> newRange = null;
+            OMetaList<HostExpression> value = null;
             modifiedStream = inputStream;
             if(!MetaRules.Apply(
                 delegate(OMetaStream<char> inputStream2, out OMetaList<HostExpression> result2, out OMetaStream <char> modifiedStream2)
@@ -488,6 +466,63 @@ namespace SharpDiff.Parsers
                         return MetaRules.Fail(out result2, out modifiedStream2);
                     }
                     if(!MetaRules.ApplyWithArgs(Token, modifiedStream2, out result2, out modifiedStream2, ("@@").AsHostExpressionList()))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    if(!MetaRules.Or(modifiedStream2, out result2, out modifiedStream2,
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.Apply(Text, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        return MetaRules.Success();
+                    }
+                    ,delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.Apply(
+                            delegate(OMetaStream<char> inputStream4, out OMetaList<HostExpression> result4, out OMetaStream <char> modifiedStream4)
+                            {
+                                modifiedStream4 = inputStream4;
+                                if(!MetaRules.Apply(Empty, modifiedStream4, out result4, out modifiedStream4))
+                                {
+                                    return MetaRules.Fail(out result4, out modifiedStream4);
+                                }
+                                result4 = ( "" ).AsHostExpressionList();
+                                return MetaRules.Success();
+                            }, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        return MetaRules.Success();
+                    }
+                    ))
+                    {
+                        return MetaRules.Fail(out result2, out modifiedStream2);
+                    }
+                    value = result2;
+                    if(!MetaRules.Or(modifiedStream2, out result2, out modifiedStream2,
+                    delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.Apply(NewLine, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        return MetaRules.Success();
+                    }
+                    ,delegate(OMetaStream<char> inputStream3, out OMetaList<HostExpression> result3, out OMetaStream <char> modifiedStream3)
+                    {
+                        modifiedStream3 = inputStream3;
+                        if(!MetaRules.Apply(Empty, modifiedStream3, out result3, out modifiedStream3))
+                        {
+                            return MetaRules.Fail(out result3, out modifiedStream3);
+                        }
+                        return MetaRules.Success();
+                    }
+                    ))
                     {
                         return MetaRules.Fail(out result2, out modifiedStream2);
                     }

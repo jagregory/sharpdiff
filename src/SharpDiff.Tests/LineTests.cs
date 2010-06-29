@@ -8,14 +8,15 @@ namespace SharpDiff.Tests
     public class LineTests : AbstractParserTestFixture
     {
         [Test]
-        public void CanParseLineWhenOnSameLineAsChunkRange()
+        public void CanParseLinesWhenRangeHasLine()
         {
             var result = Parse<Diff>(
                 "diff --git a/SmallTextFile.txt b/SmallTextFile.txt\r\n" +
                 "index f1c2d64..a59864c 100644\r\n" +
                 "--- a/SmallTextFile.txt\r\n" +
                 "+++ b/SmallTextFile.txt\r\n" +
-                "@@ -11,8 +11,6 @@ namespace SharpDiff\r\n", x => x.Diff);
+                "@@ -11,8 +11,6 @@ namespace SharpDiff\r\n" +
+                " some context\r\n", x => x.Diff);
 
             var chunk = result.Chunks[0];
 
@@ -26,7 +27,7 @@ namespace SharpDiff.Tests
 
             chunk.Lines
                 .AssertItem(0, Is.TypeOf<ContextLine>())
-                .AssertItem(0, item => Assert.That(item.Value, Is.EqualTo("namespace SharpDiff")));
+                .AssertItem(0, item => Assert.That(item.Value, Is.EqualTo("some context")));
         }
 
         [Test]

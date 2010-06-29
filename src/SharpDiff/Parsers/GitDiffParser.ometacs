@@ -11,14 +11,14 @@ ometa SharpDiff.Parsers.GitDiffParser : Parser {
 	IndexHeader		= "index" Space HashRange:range Space Number:mode	-> { new IndexHeader(range.As<HashRange>(), mode.As<int>()) },
 	Chunks			= (ChunkHeader NewLine | Empty) Chunk+:chunks
 																		-> { chunks },
-	Chunk			= ChunkRange:range (NewLine | Empty) DiffLines:lines (NewLine | Empty)
+	Chunk			= ChunkRange:range DiffLines:lines (NewLine | Empty)
 																		-> { new Chunk(range.As<ChunkRange>(), lines.ToIEnumerable<ILine>()) }
 					| ChunkRange:range (NewLine | Empty)				-> { new Chunk(range.As<ChunkRange>(), new List<ILine>()) },
 	
 					
 	ChunkHeader		= "---" FileDef:originalFile NewLine "+++" FileDef:newFile
 																		-> { new ChunkHeader(originalFile.As<IFile>(), newFile.As<IFile>()) },
-	ChunkRange		= "@@" Space ChangeRange:originalRange Space ChangeRange:newRange Space "@@"
+	ChunkRange		= "@@" Space ChangeRange:originalRange Space ChangeRange:newRange Space "@@" (Text | Empty -> { "" }):value (NewLine | Empty)
 																		-> { new ChunkRange(originalRange.As<ChangeRange>(), newRange.As<ChangeRange>()) },
 	ChangeRange		= ("+" | "-") Number:line "," Number:affected		-> { new ChangeRange(line.As<int>(), affected.As<int>()) }
 					| ("+" | "-") Number:line							-> { new ChangeRange(line.As<int>(), 1) },
