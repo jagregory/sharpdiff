@@ -23,11 +23,14 @@ ometa SharpDiff.Parsers.GitDiffParser : Parser {
 	ChangeRange		= ("+" | "-") Number:line "," Number:affected		-> { new ChangeRange(line.As<int>(), affected.As<int>()) }
 					| ("+" | "-") Number:line							-> { new ChangeRange(line.As<int>(), 1) },
 	Snippet			= ContextSnippet
+					| ModificationSnippet
 					| AdditionSnippet
 					| SubtractionSnippet,
 	ContextSnippet  = ContextLine+:lines								-> { new ContextSnippet(lines.ToIEnumerable<ILine>()) },
 	AdditionSnippet  = AdditionLine+:lines								-> { new AdditionSnippet(lines.ToIEnumerable<ILine>()) },
 	SubtractionSnippet  = SubtractionLine+:lines						-> { new SubtractionSnippet(lines.ToIEnumerable<ILine>()) },
+	ModificationSnippet = SubtractionLine+:subtractions AdditionLine+:additions
+																		-> { new ModificationSnippet(subtractions.ToIEnumerable<ILine>(), additions.ToIEnumerable<ILine>()) },
 	DiffLines			= AnyLine+:lines									-> { lines },
 	AnyLine				= ContextLine
 						| AdditionLine

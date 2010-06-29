@@ -71,15 +71,15 @@ namespace SharpDiff.FileStructure
         }
     }
 
-    public class ModifiedSnippet : ISnippet
+    public class ModificationSnippet : ISnippet
     {
-        private readonly ReadOnlyCollection<ILine> originalLines;
-        private readonly ReadOnlyCollection<ILine> modifiedLines;
+        private readonly ILine[] originalLines;
+        private readonly ILine[] modifiedLines;
 
-        public ModifiedSnippet(List<ILine> originalLines, List<ILine> modifiedLines)
+        public ModificationSnippet(IEnumerable<ILine> originalLines, IEnumerable<ILine> modifiedLines)
         {
-            this.originalLines = originalLines.AsReadOnly();
-            this.modifiedLines = modifiedLines.AsReadOnly();
+            this.originalLines = originalLines.ToArray();
+            this.modifiedLines = modifiedLines.ToArray();
         }
 
         public IEnumerable<ILine> OriginalLines

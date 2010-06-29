@@ -37,6 +37,30 @@ namespace SharpDiff.Tests
         }
 
         [Test]
+        public void ChunkWithDeletionsAndModificationsOfTheSameLineAreReturnedInAModifiedSnippet()
+        {
+            var result = Parse<Chunk>(
+                "@@ -1,30 +1,3 @@\r\n" +
+                " This is a context line\r\n" +
+                "-This is a subtraction line\r\n" +
+                "+This is an addition line\r\n", x => x.Chunk);
+
+            Assert.That(result.Snippets, Is.Not.Null);
+            Assert.That(result.Snippets, Has.Count.EqualTo(2));
+            
+            Assert.That(result.Snippets.ElementAt(0), Is.TypeOf<ContextSnippet>());
+            Assert.That(result.Snippets.ElementAt(1), Is.TypeOf<ModificationSnippet>());
+
+            Assert.That(result.Snippets.ElementAt(0).OriginalLines.First(), Is.TypeOf<ContextLine>());
+
+            Assert.That(result.Snippets.ElementAt(1).OriginalLines.Count(), Is.EqualTo(1));
+            Assert.That(result.Snippets.ElementAt(1).ModifiedLines.Count(), Is.EqualTo(1));
+
+            Assert.That(result.Snippets.ElementAt(1).OriginalLines.First(), Is.TypeOf<SubtractionLine>());
+            Assert.That(result.Snippets.ElementAt(1).ModifiedLines.First(), Is.TypeOf<AdditionLine>());
+        }
+
+        [Test]
         public void MultipleChunksParsed()
         {
             var result = ParseList<Chunk>(
