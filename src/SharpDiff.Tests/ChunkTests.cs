@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using SharpDiff.FileStructure;
 
@@ -28,10 +29,11 @@ namespace SharpDiff.Tests
                 "+This is an addition line\r\n" +
                 "-This is a subtraction line\r\n", x => x.Chunk);
 
-            Assert.That(result.Lines, Is.Not.Null);
-            Assert.That(result.Lines[0], Is.TypeOf<ContextLine>());
-            Assert.That(result.Lines[1], Is.TypeOf<AdditionLine>());
-            Assert.That(result.Lines[2], Is.TypeOf<SubtractionLine>());
+            Assert.That(result.Snippets, Is.Not.Null);
+            Assert.That(result.Snippets, Has.Count.EqualTo(3));
+            Assert.That(result.Snippets.ElementAt(0).OriginalLines.First(), Is.TypeOf<ContextLine>());
+            Assert.That(result.Snippets.ElementAt(1).ModifiedLines.First(), Is.TypeOf<AdditionLine>());
+            Assert.That(result.Snippets.ElementAt(2).OriginalLines.First(), Is.TypeOf<SubtractionLine>());
         }
 
         [Test]
@@ -77,12 +79,12 @@ namespace SharpDiff.Tests
             var secondChunk = list[1];
 
             // there are two lines per chunk, we should ignore the extra data after the range
-            Assert.That(firstChunk.Lines.Count, Is.EqualTo(2));
-            Assert.That(firstChunk.Lines[0], Is.TypeOf<ContextLine>());
-            Assert.That(firstChunk.Lines[1], Is.TypeOf<AdditionLine>());
-            Assert.That(secondChunk.Lines.Count, Is.EqualTo(2));
-            Assert.That(secondChunk.Lines[0], Is.TypeOf<ContextLine>());
-            Assert.That(secondChunk.Lines[1], Is.TypeOf<SubtractionLine>());
+            Assert.That(firstChunk.Snippets, Has.Count.EqualTo(2));
+            Assert.That(firstChunk.Snippets.ElementAt(0).OriginalLines.First(), Is.TypeOf<ContextLine>());
+            Assert.That(firstChunk.Snippets.ElementAt(1).ModifiedLines.First(), Is.TypeOf<AdditionLine>());
+            Assert.That(secondChunk.Snippets, Has.Count.EqualTo(2));
+            Assert.That(secondChunk.Snippets.ElementAt(0).OriginalLines.First(), Is.TypeOf<ContextLine>());
+            Assert.That(secondChunk.Snippets.ElementAt(1).OriginalLines.First(), Is.TypeOf<SubtractionLine>());
         }
     }
 }

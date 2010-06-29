@@ -14,9 +14,11 @@ namespace SharpDiff.Tests
                 new Diff(null, new[]
                 {
                     new Chunk(
-                        new ChunkRange(new ChangeRange(0, 0), new ChangeRange(1, 1)), new[]
-                        {
-                            new AdditionLine("A LINE!")
+                        new ChunkRange(new ChangeRange(0, 0), new ChangeRange(1, 1)), new[] {
+                            new AdditionSnippet(new[]
+                            {
+                                new AdditionLine("A LINE!")
+                            })
                         }), 
                 })
             );
@@ -36,9 +38,12 @@ namespace SharpDiff.Tests
                     new Chunk(
                         new ChunkRange(new ChangeRange(0, 0), new ChangeRange(1, 2)), new[]
                         {
-                            new AdditionLine("A LINE!"),
-                            new AdditionLine("Another line!")
-                        }), 
+                            new AdditionSnippet(new[]
+                            {
+                                new AdditionLine("A LINE!"),
+                                new AdditionLine("Another line!")
+                            })
+                        })
                 })
             );
 
@@ -55,12 +60,18 @@ namespace SharpDiff.Tests
                 new Diff(null, new[]
                 {
                     new Chunk(
-                        new ChunkRange(new ChangeRange(1, 2), new ChangeRange(1, 3)), new ILine[]
+                        new ChunkRange(new ChangeRange(1, 2), new ChangeRange(1, 3)), new ISnippet[]
                         {
-                            new AdditionLine("A LINE!"),
-                            new ContextLine("original first line"),
-                            new ContextLine("original second line")
-                        }), 
+                            new AdditionSnippet(new[]
+                            {
+                                new AdditionLine("A LINE!"),
+                            }),
+                            new ContextSnippet(new[]
+                            {
+                                new ContextLine("original first line"),
+                                new ContextLine("original second line")
+                            })
+                        })
                 })
             );
 
@@ -87,10 +98,16 @@ namespace SharpDiff.Tests
                 new Diff(null, new[]
                 {
                     new Chunk(
-                        new ChunkRange(new ChangeRange(1, 2), new ChangeRange(1, 1)), new ILine[]
+                        new ChunkRange(new ChangeRange(1, 2), new ChangeRange(1, 1)), new ISnippet[]
                         {
-                            new ContextLine("hello"),
-                            new SubtractionLine("there")
+                            new ContextSnippet(new[]
+                            {
+                                new ContextLine("hello")
+                            }),
+                            new SubtractionSnippet(new[]
+                            {
+                                new SubtractionLine("there")
+                            })
                         }), 
                 })
             );
@@ -115,10 +132,13 @@ namespace SharpDiff.Tests
                 new Diff(null, new[]
                 {
                     new Chunk(
-                        new ChunkRange(new ChangeRange(1, 2), new ChangeRange(0, 0)), new ILine[]
+                        new ChunkRange(new ChangeRange(1, 2), new ChangeRange(0, 0)), new[]
                         {
-                            new SubtractionLine("hello"),
-                            new SubtractionLine("there")
+                            new SubtractionSnippet(new[]
+                            {
+                                new SubtractionLine("hello"),
+                                new SubtractionLine("there")
+                            })
                         }), 
                 })
             );
@@ -142,21 +162,39 @@ namespace SharpDiff.Tests
                 new Diff(null, new[]
                 {
                     new Chunk(
-                        new ChunkRange(new ChangeRange(3, 9), new ChangeRange(3, 12)), new ILine[]
+                        new ChunkRange(new ChangeRange(3, 9), new ChangeRange(3, 12)), new ISnippet[]
                         {
-                            new ContextLine("this"),
-                            new ContextLine("is"),
-                            new ContextLine("a"),
-                            new AdditionLine("here"),
-                            new AdditionLine("are"),
-                            new ContextLine("load"),
-                            new ContextLine("of"),
-                            new SubtractionLine("new"),
-                            new AdditionLine("some"),
-                            new AdditionLine("additions"),
-                            new ContextLine("lines"),
-                            new ContextLine("for"),
-                            new ContextLine("complicating")
+                            new ContextSnippet(new[]
+                            {
+                                new ContextLine("this"),
+                                new ContextLine("is"),
+                                new ContextLine("a")
+                            }),
+                            new AdditionSnippet(new[]
+                            {
+                                new AdditionLine("here"),
+                                new AdditionLine("are")
+                            }),
+                            new ContextSnippet(new[]
+                            {
+                                new ContextLine("load"),
+                                new ContextLine("of")
+                            }),
+                            new SubtractionSnippet(new[]
+                            {
+                                new SubtractionLine("new")
+                            }),
+                            new AdditionSnippet(new[]
+                            {
+                                new AdditionLine("some"),
+                                new AdditionLine("additions")
+                            }),
+                            new ContextSnippet(new[]
+                            {
+                                new ContextLine("lines"),
+                                new ContextLine("for"),
+                                new ContextLine("complicating")
+                            })
                         }), 
                 })
             );

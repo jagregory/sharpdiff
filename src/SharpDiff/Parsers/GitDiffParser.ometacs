@@ -11,9 +11,9 @@ ometa SharpDiff.Parsers.GitDiffParser : Parser {
 	IndexHeader		= "index" Space HashRange:range Space Number:mode	-> { new IndexHeader(range.As<HashRange>(), mode.As<int>()) },
 	Chunks			= (ChunkHeader NewLine | Empty) Chunk+:chunks
 																		-> { chunks },
-	Chunk			= ChunkRange:range DiffLines:lines (NewLine | Empty)
-																		-> { new Chunk(range.As<ChunkRange>(), lines.ToIEnumerable<ILine>()) }
-					| ChunkRange:range (NewLine | Empty)				-> { new Chunk(range.As<ChunkRange>(), new List<ILine>()) },
+	Chunk			= ChunkRange:range Snippet+:snippets (NewLine | Empty)
+																		-> { new Chunk(range.As<ChunkRange>(), snippets.ToIEnumerable<ISnippet>()) }
+					| ChunkRange:range (NewLine | Empty)				-> { new Chunk(range.As<ChunkRange>(), new List<ISnippet>()) },
 	
 					
 	ChunkHeader		= "---" FileDef:originalFile NewLine "+++" FileDef:newFile
@@ -22,6 +22,12 @@ ometa SharpDiff.Parsers.GitDiffParser : Parser {
 																		-> { new ChunkRange(originalRange.As<ChangeRange>(), newRange.As<ChangeRange>()) },
 	ChangeRange		= ("+" | "-") Number:line "," Number:affected		-> { new ChangeRange(line.As<int>(), affected.As<int>()) }
 					| ("+" | "-") Number:line							-> { new ChangeRange(line.As<int>(), 1) },
+	Snippet			= ContextSnippet
+					| AdditionSnippet
+					| SubtractionSnippet,
+	ContextSnippet  = ContextLine+:lines								-> { new ContextSnippet(lines.ToIEnumerable<ILine>()) },
+	AdditionSnippet  = AdditionLine+:lines								-> { new AdditionSnippet(lines.ToIEnumerable<ILine>()) },
+	SubtractionSnippet  = SubtractionLine+:lines						-> { new SubtractionSnippet(lines.ToIEnumerable<ILine>()) },
 	DiffLines			= AnyLine+:lines									-> { lines },
 	AnyLine				= ContextLine
 						| AdditionLine

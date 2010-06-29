@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SharpDiff.Core;
 using SharpDiff.FileStructure;
 
@@ -28,18 +29,27 @@ namespace SharpDiff
                 if (lineLocation < 0)
                     lineLocation = 0;
 
-                foreach (var line in chunk.Lines)
+                foreach (var snippet in chunk.Snippets)
                 {
-                    // this smells
-                    if (line is AdditionLine)
-                        fileLines.Insert(lineLocation, line.Value);
-                    if (line is SubtractionLine)
+                    if (snippet is AdditionSnippet)
                     {
-                        fileLines.RemoveAt(lineLocation);
-                        continue;
+                        foreach (var line in snippet.ModifiedLines)
+                        {
+                            fileLines.Insert(lineLocation, line.Value);
+                            lineLocation++;
+                        }
                     }
-
-                    lineLocation++;
+                    else if (snippet is SubtractionSnippet)
+                    {
+                        foreach (var line in snippet.OriginalLines)
+                        {
+                            fileLines.RemoveAt(lineLocation);
+                        }
+                    }
+                    else if (snippet is ContextSnippet)
+                    {
+                        lineLocation += snippet.OriginalLines.Count();
+                    }
                 }
             }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using SharpDiff.FileStructure;
 
@@ -25,7 +26,7 @@ namespace SharpDiff.Tests
             Assert.That(chunk.NewRange.StartLine, Is.EqualTo(11));
             Assert.That(chunk.NewRange.LinesAffected, Is.EqualTo(6));
 
-            chunk.Lines
+            chunk.Snippets.First().OriginalLines
                 .AssertItem(0, Is.TypeOf<ContextLine>())
                 .AssertItem(0, item => Assert.That(item.Value, Is.EqualTo("some context")));
         }
