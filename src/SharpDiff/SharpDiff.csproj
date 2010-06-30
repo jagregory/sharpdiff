@@ -54,11 +54,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileStructure\AdditionLine.cs" />
+    <Compile Include="FileStructure\AdditionSnippet.cs" />
     <Compile Include="FileStructure\ChangeRange.cs" />
     <Compile Include="FileStructure\Chunk.cs" />
     <Compile Include="FileStructure\ChunkHeader.cs" />
     <Compile Include="FileStructure\ChunkRange.cs" />
     <Compile Include="FileStructure\ContextLine.cs" />
+    <Compile Include="FileStructure\ContextSnippet.cs" />
     <Compile Include="FileStructure\Diff.cs" />
     <Compile Include="Core\FileAccessor.cs" />
     <Compile Include="FileStructure\File.cs" />
@@ -66,9 +68,15 @@
     <Compile Include="Core\IFileAccessor.cs" />
     <Compile Include="FileStructure\IFile.cs" />
     <Compile Include="FileStructure\ILine.cs" />
+    <Compile Include="FileStructure\ISnippet.cs" />
+    <Compile Include="FileStructure\ModificationSnippet.cs" />
+    <Compile Include="FileStructure\ModificationLine.cs" />
     <Compile Include="FileStructure\NoNewLineAtEOFLine.cs" />
     <Compile Include="FileStructure\NullFile.cs" />
     <Compile Include="FileStructure\Numstat\FileStats.cs" />
+    <Compile Include="FileStructure\Span.cs" />
+    <Compile Include="FileStructure\SpanKind.cs" />
+    <Compile Include="FileStructure\SubtractionSnippet.cs" />
     <Compile Include="Parsers\GitDiffParser.cs" />
     <Compile Include="FileStructure\HashRange.cs" />
     <Compile Include="FileStructure\Header.cs" />
@@ -78,6 +86,7 @@
     <Compile Include="Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileStructure\SubtractionLine.cs" />
+    <Compile Include="Utils\DiffMatchPatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Parsers\GitNumstatParser.ometacs">

@@ -1,4 +1,4 @@
-using SharpDiff.FileStructure;
+using System.Collections.Generic;
 
 namespace SharpDiff.FileStructure
 {
@@ -10,5 +10,10 @@ namespace SharpDiff.FileStructure
         }
 
         public string Value { get; private set; }
+
+        public IEnumerable<Span> Spans
+        {
+            get { return new[] { new Span(Value, SpanKind.Equal) }; }
+        }
     }
 }

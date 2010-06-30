@@ -56,8 +56,8 @@ namespace SharpDiff.Tests
             Assert.That(result.Snippets.ElementAt(1).OriginalLines.Count(), Is.EqualTo(1));
             Assert.That(result.Snippets.ElementAt(1).ModifiedLines.Count(), Is.EqualTo(1));
 
-            Assert.That(result.Snippets.ElementAt(1).OriginalLines.First(), Is.TypeOf<SubtractionLine>());
-            Assert.That(result.Snippets.ElementAt(1).ModifiedLines.First(), Is.TypeOf<AdditionLine>());
+            Assert.That(result.Snippets.ElementAt(1).OriginalLines.First(), Is.TypeOf<ModificationLine>());
+            Assert.That(result.Snippets.ElementAt(1).ModifiedLines.First(), Is.TypeOf<ModificationLine>());
         }
 
         [Test]

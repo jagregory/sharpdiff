@@ -1,4 +1,4 @@
-using SharpDiff.FileStructure;
+using System.Collections.Generic;
 
 namespace SharpDiff.FileStructure
 {
@@ -7,6 +7,11 @@ namespace SharpDiff.FileStructure
         public string Value
         {
             get { return "No newline at end of file"; }
+        }
+
+        public IEnumerable<Span> Spans
+        {
+            get { return new[] { new Span(Value, SpanKind.Equal) }; }
         }
     }
 }
