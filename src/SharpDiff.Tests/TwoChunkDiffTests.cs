@@ -5,7 +5,7 @@ using SharpDiff.FileStructure;
 namespace SharpDiff.Tests
 {
     [TestFixture]
-    public class DiffingTests
+    public class TwoChunkDiffTests
     {
         const string fileOneContent = "one\r\ntwo\r\nthree\r\nfour\r\nfive\r\nsix\r\nseven\r\neight\r\nnine\r\nten";
         const string fileTwoContent = "zero\r\none\r\ntwo\r\nthree\r\nfour\r\nfive\r\nsix\r\nseven\r\neight\r\neight.5\r\nnine\r\nten";
