@@ -1,15 +1,24 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpDiff.FileStructure
 {
     public class AdditionSnippet : ISnippet
     {
-        private readonly ILine[] lines;
+        private readonly List<ILine> lines;
+
+        public AdditionSnippet()
+        {
+            lines = new List<ILine>();
+        }
 
         public AdditionSnippet(IEnumerable<ILine> lines)
         {
-            this.lines = lines.ToArray();
+            this.lines = new List<ILine>(lines);
+        }
+
+        public void AddLine(ILine line)
+        {
+            lines.Add(line);
         }
 
         public IEnumerable<ILine> OriginalLines

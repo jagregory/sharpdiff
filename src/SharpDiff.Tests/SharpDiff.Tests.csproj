@@ -57,6 +57,7 @@
     <Compile Include="ChangeRangeTests.cs" />
     <Compile Include="ChunkRangeTests.cs" />
     <Compile Include="ChunkTests.cs" />
+    <Compile Include="DiffingTests.cs" />
     <Compile Include="FilenameTests.cs" />
     <Compile Include="FormatTests.cs" />
     <Compile Include="HashRangeTests.cs" />

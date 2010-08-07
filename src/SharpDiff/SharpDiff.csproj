@@ -43,6 +43,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -53,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Differ.cs" />
     <Compile Include="FileStructure\AdditionLine.cs" />
     <Compile Include="FileStructure\AdditionSnippet.cs" />
     <Compile Include="FileStructure\ChangeRange.cs" />
@@ -84,9 +86,11 @@
     <Compile Include="InvalidDiffFormatException.cs" />
     <Compile Include="Parsers\GitNumstatParser.cs" />
     <Compile Include="Patch.cs" />
+    <Compile Include="PatchMaker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileStructure\SubtractionLine.cs" />
     <Compile Include="Utils\DiffMatchPatch.cs" />
+    <Compile Include="Utils\MathertelDiff.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Parsers\GitNumstatParser.ometacs">

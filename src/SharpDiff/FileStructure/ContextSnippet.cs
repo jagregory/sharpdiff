@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpDiff.FileStructure
 {
     public class ContextSnippet : ISnippet
     {
-        private readonly IEnumerable<ILine> lines;
+        private readonly List<ILine> lines;
 
         public ContextSnippet(IEnumerable<ILine> lines)
         {
-            this.lines = lines.ToArray();
+            this.lines = new List<ILine>(lines);
         }
 
         public IEnumerable<ILine> OriginalLines

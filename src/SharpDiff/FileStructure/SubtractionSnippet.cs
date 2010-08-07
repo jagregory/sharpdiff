@@ -5,11 +5,21 @@ namespace SharpDiff.FileStructure
 {
     public class SubtractionSnippet : ISnippet
     {
-        private readonly IEnumerable<ILine> lines;
+        private readonly List<ILine> lines;
+
+        public SubtractionSnippet()
+        {
+            lines = new List<ILine>();
+        }
 
         public SubtractionSnippet(IEnumerable<ILine> lines)
         {
-            this.lines = lines.ToArray();
+            this.lines = new List<ILine>(lines);
+        }
+
+        public void AddLine(ILine line)
+        {
+            lines.Add(line);
         }
 
         public IEnumerable<ILine> OriginalLines

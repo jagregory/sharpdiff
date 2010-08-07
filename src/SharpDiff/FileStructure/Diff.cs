@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using OMetaSharp;
-using SharpDiff.FileStructure;
-using SharpDiff.Parsers;
 
 namespace SharpDiff.FileStructure
 {
@@ -30,11 +27,6 @@ namespace SharpDiff.FileStructure
         public bool IsDeletion
         {
             get { return header.IsDeletion; }
-        }
-
-        public static IList<Diff> CreateFrom(string content)
-        {
-            return new List<Diff>(Grammars.ParseWith<GitDiffParser>(content, x => x.Diffs).ToIEnumerable<Diff>());
         }
     }
 }
