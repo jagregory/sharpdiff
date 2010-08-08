@@ -17,6 +17,17 @@ namespace SharpDiff.FileStructure
 
         private void CreateInlineDiffs(IEnumerable<ILine> originals, IEnumerable<ILine> modifieds)
         {
+            if (originals.Count() != modifieds.Count())
+            {
+                originalLines.AddRange(
+                    originals.Select(x => new ModificationLine(new[] { new Span(x.Value, SpanKind.Deletion) }))
+                );
+                modifiedLines.AddRange(
+                    modifieds.Select(x => new ModificationLine(new[] { new Span(x.Value, SpanKind.Addition) }))
+                );
+                return;
+            }
+
             var maxLines = Math.Max(originals.Count(), modifieds.Count());
 
             for (var i = 0; i < maxLines; i++)

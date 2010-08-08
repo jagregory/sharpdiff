@@ -23,7 +23,11 @@ namespace SharpDiff
             for (var i = 0; i < changes.Length; i++)
             {
                 var change = changes[i];
-                var nextChange = changes.ElementAtOrDefault(i + 1);
+                Diff.Item? nextChange = null;
+
+                if (changes.Length > i + 1)
+                    nextChange = changes.ElementAtOrDefault(i + 1);
+
                 var continuation = currentChunk != null;
 
                 if (!continuation)
@@ -46,19 +50,38 @@ namespace SharpDiff
                     }
                 }
 
-                for (var j = 0; j < change.insertedB; j++)
+                if (change.deletedA > 0)
                 {
-                    var line = contentTwoLines[j + change.StartB];
-                    currentChunk.diffs.Add(new Line(Operation.INSERT, line));
+                    for (var j = 0; j < change.deletedA; j++)
+                    {
+                        var line = contentOneLines[j + change.StartA];
+                        currentChunk.diffs.Add(new Line(Operation.DELETE, line));
+                    }
+                }
+
+                if (change.insertedB > 0)
+                {
+                    for (var j = 0; j < change.insertedB; j++)
+                    {
+                        var line = contentTwoLines[j + change.StartB];
+                        currentChunk.diffs.Add(new Line(Operation.INSERT, line));
+                    }
                 }
 
                 var start2 = change.StartB + change.insertedB;
-                for (var j = start2; j < Math.Min(start2 + options.ContextSize, contentTwoLines.Length); j++)
+                int end;
+                
+                if (nextChange.HasValue)
+                    end = Min(start2 + options.ContextSize, contentTwoLines.Length, nextChange.Value.StartB);
+                else
+                    end = Min(start2 + options.ContextSize, contentTwoLines.Length);
+
+                for (var j = start2; j < end; j++)
                 {
                     currentChunk.diffs.Add(new Line(Operation.EQUAL, contentTwoLines[j]));
                 }
 
-                if (distance_between(change, nextChange) > options.ContextSize * 2)
+                if (nextChange.HasValue && nextChange.Value.StartB - end > 0)
                 {
                     // need to split the diff into multiple chunks
                     currentChunk = null;
@@ -72,6 +95,16 @@ namespace SharpDiff
             }
 
             return chunks;
+        }
+
+        private int Min(params int[] ints)
+        {
+            if (ints.Length == 1)
+                return ints[0];
+
+            var small = Math.Min(ints.ElementAt(0), ints.ElementAt(1));
+
+            return Min(new[] { small }.Concat(ints.Skip(2)).ToArray());
         }
 
         private Chunk CreateChunk(Diff.Item change, CompareOptions options)

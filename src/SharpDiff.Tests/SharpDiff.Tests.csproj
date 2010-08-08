@@ -58,6 +58,7 @@
     <Compile Include="ChunkRangeTests.cs" />
     <Compile Include="ChunkTests.cs" />
     <Compile Include="OneChunkDiffTests.cs" />
+    <Compile Include="RealWorldDiffTests.cs" />
     <Compile Include="TwoChunkDiffTests.cs" />
     <Compile Include="FilenameTests.cs" />
     <Compile Include="FormatTests.cs" />
