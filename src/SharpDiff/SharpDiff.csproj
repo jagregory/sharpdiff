@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BomMode.cs" />
     <Compile Include="Differ.cs" />
     <Compile Include="FileStructure\AdditionLine.cs" />
     <Compile Include="FileStructure\AdditionSnippet.cs" />

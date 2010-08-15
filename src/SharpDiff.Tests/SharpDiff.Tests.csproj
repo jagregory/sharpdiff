@@ -70,12 +70,21 @@
     <Compile Include="Numstat\FileStatsTests.cs" />
     <Compile Include="PatchTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnicodeBomTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpDiff\SharpDiff.csproj">
       <Project>{91E98035-4805-4F55-84AB-AB6E00BBC526}</Project>
       <Name>SharpDiff</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fixtures\file_without_bom.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fixtures\file_with_bom.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
