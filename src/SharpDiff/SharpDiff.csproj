@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="BomMode.cs" />
     <Compile Include="Differ.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="FileStructure\AdditionLine.cs" />
     <Compile Include="FileStructure\AdditionSnippet.cs" />
     <Compile Include="FileStructure\ChangeRange.cs" />
