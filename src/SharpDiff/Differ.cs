@@ -36,11 +36,25 @@ namespace SharpDiff
 
         public static Diff Compare(string fileOnePath, string fileOneContent, string fileTwoPath, string fileTwoContent, CompareOptions options)
         {
+            if (fileOneContent == null && fileTwoContent == null)
+                throw new InvalidOperationException("Both files were null");
+
             if (options.BomMode == BomMode.Ignore)
             {
-                fileOneContent = RemoveBom(fileOneContent);
-                fileTwoContent = RemoveBom(fileTwoContent);
+                if (fileOneContent != null)
+                    fileOneContent = RemoveBom(fileOneContent);
+                if (fileTwoContent != null)
+                    fileTwoContent = RemoveBom(fileTwoContent);
             }
+
+            if (fileTwoContent == null)
+                return DeletedFileDiff(fileOneContent, fileOnePath);
+            if (fileOneContent == null)
+                return NewFileDiff(fileTwoContent, fileTwoPath);
+            if (IsBinary(fileOneContent))
+                throw new BinaryFileException(fileOnePath);
+            if (IsBinary(fileTwoContent))
+                throw new BinaryFileException(fileTwoPath);
 
             var patchMaker = new PatchMaker();
             var patches = patchMaker.MakePatch(fileOneContent, fileTwoContent, options);
@@ -114,7 +128,47 @@ namespace SharpDiff
             return new Diff(header, chunks);
         }
 
-        private static List<byte[]> byteOrderMarks = new List<byte[]>
+        static bool IsBinary(string content)
+        {
+            // todo: make this more robust
+            return content.Contains("\0\0\0");
+        }
+
+        private static Diff DeletedFileDiff(string content, string path)
+        {
+            var header = new Header(new FormatType("generated"), new[]
+            {
+                new File('a', path),
+                new File('b', "/dev/null")
+            });
+
+            var lines = content.SplitIntoLines()
+                .Select(x => (ILine)new SubtractionLine(x));
+            var range = new ChunkRange(new ChangeRange(1, lines.Count()), new ChangeRange(0, 0));
+            var snippet = new SubtractionSnippet(lines);
+            var chunk = new Chunk(range, new[] { snippet });
+
+            return new Diff(header, new[] { chunk });
+        }
+
+        private static Diff NewFileDiff(string content, string path)
+        {
+            var header = new Header(new FormatType("generated"), new[]
+            {
+                new File('a', "/dev/null"),
+                new File('b', path)
+            });
+
+            var lines = content.SplitIntoLines()
+                .Select(x => (ILine)new AdditionLine(x));
+            var range = new ChunkRange(new ChangeRange(0, 0), new ChangeRange(1, lines.Count()));
+            var snippet = new AdditionSnippet(lines);
+            var chunk = new Chunk(range, new[] { snippet });
+
+            return new Diff(header, new[] { chunk });
+        }
+
+        private static readonly List<byte[]> ByteOrderMarks = new List<byte[]>
         {
             new byte[] { 0x00, 0x00, 0xFE, 0xFF },
             new byte[] { 0xFF, 0xFE, 0x00, 0x00 },
@@ -128,21 +182,16 @@ namespace SharpDiff
             var encoding = new UTF8Encoding();
             var bytes = encoding.GetBytes(content);
 
-            if (bytes.Take(4).ContainsOnly(byteOrderMarks[0]) || bytes.Take(4).ContainsOnly(byteOrderMarks[1]))
+            if (bytes.Take(4).ContainsOnly(ByteOrderMarks[0]) || bytes.Take(4).ContainsOnly(ByteOrderMarks[1]))
                 return encoding.GetString(bytes.Skip(4).ToArray());
 
-            if (bytes.Take(3).ContainsOnly(byteOrderMarks[2]))
+            if (bytes.Take(3).ContainsOnly(ByteOrderMarks[2]))
                 return encoding.GetString(bytes.Skip(3).ToArray());
 
-            if (bytes.Take(2).ContainsOnly(byteOrderMarks[3]) || bytes.Take(2).ContainsOnly(byteOrderMarks[4])) 
+            if (bytes.Take(2).ContainsOnly(ByteOrderMarks[3]) || bytes.Take(2).ContainsOnly(ByteOrderMarks[4])) 
                 return encoding.GetString(bytes.Skip(2).ToArray());
 
             return content;
-        }
-
-        static string ReadFile(string path)
-        {
-            return System.IO.File.ReadAllText(path.Replace("/", "\\"));
         }
     }
 }

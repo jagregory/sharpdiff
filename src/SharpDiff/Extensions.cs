@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpDiff
@@ -22,6 +23,11 @@ namespace SharpDiff
             }
 
             return true;
+        }
+
+        public static string[] SplitIntoLines(this string value)
+        {
+            return value.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
         }
     }
 }
